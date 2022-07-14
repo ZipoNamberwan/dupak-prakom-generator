@@ -24,6 +24,10 @@ class Version1 extends Migration
             $table->id()->autoincrement();
             $table->string('name');
         });
+        Schema::create('infra_type', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->string('name');
+        });
         Schema::create('unsur', function (Blueprint $table) {
             $table->id()->autoincrement();
             $table->string('code');
@@ -49,20 +53,20 @@ class Version1 extends Migration
             $table->foreignId('location_id')->constrained('location');
             $table->foreignId('butir_kegiatan_id')->constrained('butir_kegiatan');
             //specific attribute
-            $table->string('title');
+            $table->text('title');
             $table->string('time');
             $table->string('infra_name');
             $table->string('infra_type');
             $table->string('infra_func');
             $table->enum('type', ['detect', 'fix']);
-            $table->string('background')->nullable();
-            $table->string('problem_ident')->nullable();
-            $table->string('problem_analysis')->nullable();
-            $table->string('result_ident')->nullable();
-            $table->string('solution')->nullable();
-            $table->string('action')->nullable();
-            $table->string('documentation')->nullable();
-            $table->string('approval_letter')->nullable();
+            $table->text('background')->nullable();
+            $table->text('problem_ident')->nullable();
+            $table->text('problem_analysis')->nullable();
+            $table->text('result_ident')->nullable();
+            $table->text('solution')->nullable();
+            $table->text('action')->nullable();
+            $table->text('documentation')->nullable();
+            $table->text('approval_letter')->nullable();
             $table->timestamps();
         });
     }

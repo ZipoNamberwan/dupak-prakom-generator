@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\ButirKegiatan;
+use App\Models\InfraType;
 use App\Models\Location;
 use App\Models\SubUnsur;
 use App\Models\Unsur;
@@ -48,5 +49,24 @@ class MasterSeeder extends Seeder
             'subunsur_id' => $subunsur->id,
             'credit' => 0.02
         ]);
+
+        InfraType::create(
+            ['name' => 'Komputer']
+        );
+        InfraType::create(
+            ['name' => 'Printer']
+        );
+        InfraType::create(
+            ['name' => 'Laptop']
+        );
+        InfraType::create(
+            ['name' => 'CCTV']
+        );
+        InfraType::create(
+            ['name' => 'Router']
+        );
+        InfraType::create(
+            ['name' => 'Tipe Lainnya']
+        );
     }
 }

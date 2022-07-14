@@ -9,7 +9,7 @@ class IIB12 extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $table = 'II.B.12';
+    protected $table = 'IIB12';
 
     public function userDataDetail()
     {
