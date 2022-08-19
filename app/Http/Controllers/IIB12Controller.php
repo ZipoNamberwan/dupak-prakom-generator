@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\ButirKegiatan;
+use App\Models\IIB12;
 use App\Models\InfraType;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,8 @@ class IIB12Controller extends Controller
      */
     public function index()
     {
-        //
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
+        return view('iib12/index-iib12', ['butirkeg' => $butirkegiatan, 'infratypes' => InfraType::all()]);
     }
 
     /**
@@ -26,7 +28,7 @@ class IIB12Controller extends Controller
     public function create()
     {
         $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
-        return view('create-IIB12', ['butirkeg' => $butirkegiatan, 'infratypes' => InfraType::all()]);
+        return view('iib12/create-iib12', ['butirkeg' => $butirkegiatan, 'infratypes' => InfraType::all()]);
     }
 
     /**
@@ -83,5 +85,9 @@ class IIB12Controller extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getData(){
+        return IIB12::all();
     }
 }

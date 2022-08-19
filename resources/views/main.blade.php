@@ -15,7 +15,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
     <meta name="author" content="Creative Tim">
-    <title>New Rakit Komputer - Backend</title>
+    <title>Dupak Prakom Generator</title>
     <!-- Favicon -->
     <link rel="icon" href="/assets/img/brand/favicon.png" type="image/png">
     <!-- Fonts -->
@@ -60,6 +60,29 @@
                                 <i class="fas fa-home text-primary"></i>
                                 <span class="nav-link-text">Dashboard</span>
                             </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#navbar-components" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-components">
+                                <i class="ni ni-ui-04 text-info"></i>
+                                <span class="nav-link-text">II. Infrastruktur Teknologi Informasi</span>
+                            </a>
+                            <div class="collapse" id="navbar-components">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="#navbar-multilevel" class="nav-link" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-multilevel">II.B.12 Deteksi dan Perbaikan Infrastruktur TI</a>
+                                        <div class="collapse show" id="navbar-multilevel">
+                                            <ul class="nav nav-sm flex-column">
+                                                <li class="nav-item">
+                                                    <a href="/IIB12" class="nav-link ">Daftar Kegiatan</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="#!" class="nav-link ">Generate Lembar Persetujuan</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                     </ul>
                 </div>

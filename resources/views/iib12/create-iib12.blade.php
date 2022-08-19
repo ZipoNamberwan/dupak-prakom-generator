@@ -94,9 +94,6 @@
                                 <div class="col-md-6 mb-3">
                                 </div>
 
-
-
-
                                 <div class="col-12">
                                     <h4 class="mt-3">Informasi Infrastruktur</h4>
                                     <div class="row">
@@ -136,7 +133,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12" id="detection_form" style="display: none;">
                                     <h4 class="mt-3">Identifikasi Masalah</h4>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
@@ -168,7 +165,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12">
+                                <div class="col-12" id="fix_form" style="display: none;">
                                     <h4 class="mt-3">Identifikasi Masalah</h4>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
@@ -201,8 +198,16 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
+                                    <label class="form-control-label" for="result_ident">Dokumentasi</label>
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="customFileLang" lang="en">
+                                        <input name="documentation" type="file" class="custom-file-input" id="customFileLang" lang="en" accept="image/*">
+                                        <label class="custom-file-label" for="customFileLang">Select file</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-control-label" for="result_ident">Surat Persetujuan</label>
+                                    <div class="custom-file">
+                                        <input name="documentation" type="file" class="custom-file-input" id="customFileLang" lang="en" accept="image/*">
                                         <label class="custom-file-label" for="customFileLang">Select file</label>
                                     </div>
                                 </div>
@@ -226,6 +231,19 @@
         var fileInput = document.getElementById('file');
         var filename = fileInput.files[0].name;
         document.getElementById('filelabel').innerHTML = filename;
+    }
+</script>
+<script>
+    var radios = document.getElementsByName('type');
+    var detectionForm = document.getElementById('detection_form');
+    var fixForm = document.getElementById('fix_form');
+    radios[0].onclick = function() {
+        detectionForm.style.display = 'block'
+        fixForm.style.display = 'none'
+    }
+    radios[1].onclick = function() {
+        detectionForm.style.display = 'none'
+        fixForm.style.display = 'block'
     }
 </script>
 @endsection
