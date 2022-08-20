@@ -47,19 +47,19 @@
                     </div>
                     <!-- Card body -->
                     <div class="card-body">
-                        <form autocomplete="off" method="post" onsubmit="return onSubmit()" action="/hdds" class="needs-validation" enctype="multipart/form-data" novalidate>
+                        <form autocomplete="off" method="post" action="/IIB12" class="needs-validation" enctype="multipart/form-data" novalidate>
                             @csrf
                             <div class="row">
 
                                 <div class="col-md-12 mb-3">
                                     <label class="form-control-label" for="title">Tipe Butir Kegiatan</label>
                                     <div class="custom-control custom-radio mb-2">
-                                        <input name="type" class="custom-control-input" id="type_radio1" value="detect" type="radio" {{ old('type') == 'L' ? 'checked' : '' }}>
+                                        <input onchange="refreshAutoTitle()" name="type" class="custom-control-input" id="type_radio1" value="detect" type="radio" {{ old('type') == 'detect' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="type_radio1">Deteksi</label>
                                     </div>
 
                                     <div class="custom-control custom-radio">
-                                        <input name="type" class="custom-control-input" id="type_radio2" value="fix" type="radio" {{ old('type') == 'P' ? 'checked' : '' }}>
+                                        <input onchange="refreshAutoTitle()" name="type" class="custom-control-input" id="type_radio2" value="fix" type="radio" {{ old('type') == 'fix' ? 'checked' : '' }}>
                                         <label class="custom-control-label" for="type_radio2">Perbaikan</label>
                                     </div>
                                     @error('type')
@@ -68,10 +68,16 @@
                                     </div>
                                     @enderror
                                 </div>
-
                                 <div class="col-md-12 mb-3">
                                     <label class="form-control-label" for="title">Judul</label>
-                                    <input type="text" class="form-control @error('title') is-invalid @enderror" value="{{@old('title')}}" id="title" name="title">
+                                    <div class="mb-3 d-flex align-items-center">
+                                        <label class="mr-3 custom-toggle">
+                                            <input type="checkbox" checked name="automatic_title" id="automatic_title" onchange=changeAutomaticTitle()>
+                                            <span class="custom-toggle-slider rounded-circle" data-label-off="Tidak" data-label-on="Ya"></span>
+                                        </label>
+                                        <span>Judul Otomatis</span>
+                                    </div>
+                                    <input readonly type="text" class="form-control @error('title') is-invalid @enderror" value="{{@old('title')}}" id="title" name="title">
                                     @error('title')
                                     <div class="invalid-feedback">
                                         {{$message}}
@@ -82,13 +88,30 @@
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group mb-0">
                                         <label class="form-control-label" for="exampleDatepicker">Tanggal</label>
-                                        <input name="birthdate" class="form-control @error('birthdate') is-invalid @enderror" placeholder="Select date" type="date" value="{{ @old('birthdate') }}">
-                                        @error('birthdate')
+                                        <input name="date" class="form-control @error('date') is-invalid @enderror" placeholder="Select date" type="date" value="{{ @old('date') }}">
+                                        @error('date')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
+                                </div>
+
+                                <div class="col-md-3 mb-3">
+                                    <label class="form-control-label">Lokasi</label>
+                                    <select id="room" name="room" class="form-control" data-toggle="select" onchange="refreshAutoTitle()">
+                                        <option value="0" disabled selected>Pilih Ruangan</option>
+                                        @foreach ($rooms as $room)
+                                        <option value="{{ $room->id }}" {{ old('room') == $room->id ? 'selected' : '' }}>
+                                            {{ $room->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    @error('room')
+                                    <div class="text-valid">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
                                 </div>
 
                                 <div class="col-md-6 mb-3">
@@ -98,17 +121,8 @@
                                     <h4 class="mt-3">Informasi Infrastruktur</h4>
                                     <div class="row">
                                         <div class="col-md-3 mb-3">
-                                            <label class="form-control-label" for="infra_name">Nama Infrastruktur</label>
-                                            <input type="text" class="form-control @error('infra_name') is-invalid @enderror" value="{{@old('infra_name')}}" id="infra_name" name="infra_name">
-                                            @error('infra_name')
-                                            <div class="invalid-feedback">
-                                                {{$message}}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3 mb-3">
                                             <label class="form-control-label">Jenis Infrastruktur</label>
-                                            <select name="infratype" class="form-control" data-toggle="select">
+                                            <select id="infratype" name="infratype" class="form-control" data-toggle="select" onchange="refreshAutoTitle()">
                                                 <option value="0" disabled selected>Pilih Jenis Infrastruktur</option>
                                                 @foreach ($infratypes as $infratype)
                                                 <option value="{{ $infratype->id }}" {{ old('infratype') == $infratype->id ? 'selected' : '' }}>
@@ -123,9 +137,18 @@
                                             @enderror
                                         </div>
                                         <div class="col-md-3 mb-3">
-                                            <label class="form-control-label" for="infra_func">Fungsi Infrastruktur</label>
-                                            <input type="text" class="form-control @error('infra_func') is-invalid @enderror" value="{{@old('infra_func')}}" id="infra_func" name="infra_func">
-                                            @error('infra_func')
+                                            <label class="form-control-label" for="infraname">Nama Infrastruktur</label>
+                                            <input onchange="refreshAutoTitle()" type="text" class="form-control @error('infraname') is-invalid @enderror" value="{{@old('infraname')}}" id="infraname" name="infraname">
+                                            @error('infraname')
+                                            <div class="invalid-feedback">
+                                                {{$message}}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-control-label" for="infrafunc">Fungsi Infrastruktur</label>
+                                            <input type="text" class="form-control @error('infrafunc') is-invalid @enderror" value="{{@old('infrafunc')}}" id="infrafunc" name="infrafunc">
+                                            @error('infrafunc')
                                             <div class="invalid-feedback">
                                                 {{$message}}
                                             </div>
@@ -198,16 +221,16 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-control-label" for="result_ident">Dokumentasi</label>
+                                    <label class="form-control-label" for="documentation">Dokumentasi</label>
                                     <div class="custom-file">
                                         <input name="documentation" type="file" class="custom-file-input" id="customFileLang" lang="en" accept="image/*">
                                         <label class="custom-file-label" for="customFileLang">Select file</label>
                                     </div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-control-label" for="result_ident">Surat Persetujuan</label>
+                                    <label class="form-control-label" for="approval_letter">Surat Persetujuan</label>
                                     <div class="custom-file">
-                                        <input name="documentation" type="file" class="custom-file-input" id="customFileLang" lang="en" accept="image/*">
+                                        <input name="approval_letter" type="file" class="custom-file-input" id="customFileLang" lang="en" accept="image/*">
                                         <label class="custom-file-label" for="customFileLang">Select file</label>
                                     </div>
                                 </div>
@@ -232,18 +255,81 @@
         var filename = fileInput.files[0].name;
         document.getElementById('filelabel').innerHTML = filename;
     }
+
+    function refreshAutoTitle() {
+        var title = document.getElementById('title')
+        var auto = document.getElementById('automatic_title')
+        if (auto.checked) {
+            var typeString = ''
+            var radios = document.getElementsByName('type');
+            if (radios[0].checked) {
+                typeString = 'Melakukan Deteksi Masalah '
+            } else if (radios[1].checked) {
+                typeString = 'Melakukan Perbaikan Masalah '
+            }
+            var infraTypeString = ''
+            var infraType = document.getElementById("infratype");
+            if (infraType.selectedIndex != 0)
+                infraTypeString = infraType.options[infraType.selectedIndex].text + ' ';
+
+            var infraNameString = ''
+            var infraName = document.getElementById('infraname')
+            infraNameString = infraName.value + ' '
+
+            var roomString = ''
+            var room = document.getElementById('room')
+            if (room.selectedIndex != 0)
+                roomString = 'di ruang ' + room.options[room.selectedIndex].text;
+
+            if (typeString != '')
+                var autoTitleString = typeString + infraTypeString + infraNameString + roomString
+            var title = document.getElementById('title')
+            title.value = autoTitleString ?? ''
+        }
+    }
+
+    function changeAutomaticTitle() {
+        var auto = document.getElementById('automatic_title')
+        var title = document.getElementById('title')
+        if (auto.checked) {
+            title.readOnly = true
+        } else {
+            title.readOnly = false
+        }
+        refreshAutoTitle()
+    }
+
+    function toggleFormType(type) {
+        var detectionForm = document.getElementById('detection_form');
+        var fixForm = document.getElementById('fix_form');
+        if (type == 'detect') {
+            detectionForm.style.display = 'block'
+            fixForm.style.display = 'none'
+        } else if (type == 'fix') {
+            detectionForm.style.display = 'none'
+            fixForm.style.display = 'block'
+        }
+    }
 </script>
+
 <script>
     var radios = document.getElementsByName('type');
-    var detectionForm = document.getElementById('detection_form');
-    var fixForm = document.getElementById('fix_form');
     radios[0].onclick = function() {
-        detectionForm.style.display = 'block'
-        fixForm.style.display = 'none'
+        toggleFormType('detect')
     }
     radios[1].onclick = function() {
-        detectionForm.style.display = 'none'
-        fixForm.style.display = 'block'
+        toggleFormType('fix')
     }
+    if (radios[0].checked) {
+        toggleFormType('detect')
+    } else if (radios[1].checked) {
+        toggleFormType('fix')
+    }
+
+    refreshAutoTitle()
 </script>
+
+
+
+
 @endsection

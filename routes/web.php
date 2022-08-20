@@ -21,3 +21,4 @@ Route::delete('/IIB12/{id}', [App\Http\Controllers\IIB12Controller::class, 'dest
 Route::get('/IIB12/{id}', [App\Http\Controllers\IIB12Controller::class, 'show']);
 Route::put('/IIB12/{id}', [App\Http\Controllers\IIB12Controller::class, 'update']);
 Route::get('/IIB12/{id}/edit', [App\Http\Controllers\IIB12Controller::class, 'edit']);
+Route::get('/IIB12/{id}/generate', [App\Http\Controllers\IIB12Controller::class, 'generate']);

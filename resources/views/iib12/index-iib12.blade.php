@@ -61,11 +61,11 @@
                             <h3 class="mb-0">Daftar Kegiatan</h3>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="{{url('/hdds/import')}}" class="btn btn-outline-primary btn-round btn-icon mb-2" data-toggle="tooltip" data-original-title="Ekspor Excel">
-                                <span class="btn-inner--icon"><i class="fas fa-upload"></i></span>
+                            <a href="{{url('/hdds/import')}}" class="btn btn-outline-primary btn-round btn-icon mb-2" data-toggle="tooltip" data-original-title="Generate">
+                                <span class="btn-inner--icon"><i class="fas fa-file-export"></i></span>
                                 <span class="btn-inner--text">Generate Bukti Fisik Periode Terakhir</span>
                             </a>
-                            <a href="{{url('/hdds/create')}}" class="btn btn-primary btn-round btn-icon mb-2" data-toggle="tooltip" data-original-title="Tambah Harddisk">
+                            <a href="{{url('/IIB12/create')}}" class="btn btn-primary btn-round btn-icon mb-2" data-toggle="tooltip" data-original-title="Tambah Kegiatan">
                                 <span class="btn-inner--icon"><i class="fas fa-plus-circle"></i></span>
                                 <span class="btn-inner--text">Tambah Kegiatan</span>
                             </a>
@@ -104,46 +104,78 @@
 <script>
     var table = $('#datatable-id').DataTable({
         "responsive": true,
-        "fixedColumns": true,
+        // "fixedColumns": true,
         "fixedHeader": true,
         "order": [],
         "serverSide": true,
         "processing": true,
         "ajax": {
-            "url": '/iib12-data',
+            "url": '/IIB12/data',
             "type": 'GET'
         },
         "columns": [{
             "responsivePriority": 8,
             "width": "2.5%",
             "orderable": false,
-            "id": "index",
+            "data": "index",
         }, {
             "responsivePriority": 3,
             "width": "5%",
-            "orderable": false,
-            "data": "title",
+            "orderable": true,
+            "data": "time",
+            "render": function(data, type, row) {
+                if (type === 'display') {
+                    const today = new Date(data);
+                    const month = ["Januari", "Februari", "Naret", "April", "Mei", "Juni",
+                        "Juli", "Augustus", "September", "Oktober", "November", "Desember"
+                    ];
+                    return today.getDate() + ' ' + month[today.getMonth()] + ' ' + today.getFullYear();
+                }
+                return data;
+            }
         }, {
             "responsivePriority": 1,
             "width": "12%",
-            "data": "time",
+            "data": "title",
         }, {
             "responsivePriority": 4,
             "width": "7%",
             "data": "documentation",
+            "render": function(data, type, row) {
+                if (type === 'display') {
+                    if (data == true) {
+                        return '<span class="btn-inner--icon btn-icon btn-sm btn-success"><i class="fas fa-check"></i></span>'
+                    } else {
+                        return '<span class="btn-inner--icon btn-icon btn-sm btn-danger"><i class="fas fa-minus"></i></span>'
+                    }
+                }
+                return data;
+            }
         }, {
             "responsivePriority": 5,
             "width": "5%",
             "data": "approval_letter",
+            "render": function(data, type, row) {
+                if (type === 'display') {
+                    if (data == true) {
+                        return '<span class="btn-inner--icon btn-icon btn-sm btn-success"><i class="fas fa-check"></i></span>'
+                    } else {
+                        return '<span class="btn-inner--icon btn-icon btn-sm btn-danger"><i class="fas fa-minus"></i></span>'
+                    }
+                }
+                return data;
+            }
         }, {
             "responsivePriority": 7,
             "width": "7%",
             "orderable": false,
             "data": "id",
             "render": function(data, type, row) {
-                return "<a href=\"/hdds/" + data + "/edit\" class=\"btn btn-outline-info  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
+                return "<a target=\"_blank\" href=\"/IIB12/" + data + "/generate\" class=\"btn btn-outline-success  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
+                    "<span class=\"btn-inner--icon\"><i class=\"fas fa-file-export\"></i></span></a>" +
+                    "<a href=\"/IIB12/" + data + "/edit\" class=\"btn btn-outline-info  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
                     "<span class=\"btn-inner--icon\"><i class=\"fas fa-edit\"></i></span></a>" +
-                    "<form class=\"d-inline\" id=\"formdelete" + data + "\" name=\"formdelete" + data + "\" onsubmit=\"deletehdd('" + data + "','" + row.name + "')\" method=\"POST\" action=\"/hdds/" + data + "\">" +
+                    "<form class=\"d-inline\" id=\"formdelete" + data + "\" name=\"formdelete" + data + "\" onsubmit=\"deleteactivity('" + data + "','" + row.title + "')\" method=\"POST\" action=\"/hdds/" + data + "\">" +
                     '@method("delete")' +
                     '@csrf' +
                     "<button class=\"btn btn-icon btn-outline-danger btn-sm\" type=\"submit\" data-toggle=\"tooltip\" data-original-title=\"Hapus Data\">" +
@@ -159,4 +191,23 @@
     });
 </script>
 
+<script>
+    function deleteactivity($id, $name) {
+        event.preventDefault();
+        Swal.fire({
+            title: 'Yakin Hapus Kegiatan Ini?',
+            text: $name,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya',
+            cancelButtonText: 'Tidak',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('formdelete' + $id).submit();
+            }
+        })
+    }
+</script>
 @endsection

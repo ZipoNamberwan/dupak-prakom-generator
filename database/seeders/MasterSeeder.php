@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\ButirKegiatan;
 use App\Models\InfraType;
 use App\Models\Location;
+use App\Models\Room;
 use App\Models\SubUnsur;
 use App\Models\Unsur;
 use App\Models\UserData;
@@ -30,6 +31,34 @@ class MasterSeeder extends Seeder
 
         Location::create([
             'name' => 'BPS Kabupaten Probolinggo',
+        ]);
+
+        Room::create([
+            'name' => 'IPDS',
+        ]);
+
+        Room::create([
+            'name' => 'Sosial',
+        ]);
+
+        Room::create([
+            'name' => 'Nerwilis/Distribusi',
+        ]);
+
+        Room::create([
+            'name' => 'Produksi',
+        ]);
+
+        Room::create([
+            'name' => 'PST',
+        ]);
+
+        Room::create([
+            'name' => 'Belakang/KSK',
+        ]);
+
+        Room::create([
+            'name' => 'Lobby',
         ]);
 
         $unsur = Unsur::create([

@@ -24,6 +24,10 @@ class Version1 extends Migration
             $table->id()->autoincrement();
             $table->string('name');
         });
+        Schema::create('room', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->string('name');
+        });
         Schema::create('infra_type', function (Blueprint $table) {
             $table->id()->autoincrement();
             $table->string('name');
@@ -54,9 +58,10 @@ class Version1 extends Migration
             $table->foreignId('butir_kegiatan_id')->constrained('butir_kegiatan');
             //specific attribute
             $table->text('title');
-            $table->string('time');
+            $table->date('time');
+            $table->foreignId('room_id')->constrained('room');
             $table->string('infra_name');
-            $table->string('infra_type');
+            $table->foreignId('infra_type_id')->constrained('infra_type');
             $table->string('infra_func');
             $table->enum('type', ['detect', 'fix']);
             $table->text('background')->nullable();
