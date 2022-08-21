@@ -61,7 +61,7 @@
                             <h3 class="mb-0">Daftar Kegiatan</h3>
                         </div>
                         <div class="col-6 text-right">
-                            <a href="{{url('/hdds/import')}}" class="btn btn-outline-primary btn-round btn-icon mb-2" data-toggle="tooltip" data-original-title="Generate">
+                            <a href="{{url('/IIB12/generate-by-periode')}}" target="_blank" class="btn btn-outline-primary btn-round btn-icon mb-2" data-toggle="tooltip" data-original-title="Generate">
                                 <span class="btn-inner--icon"><i class="fas fa-file-export"></i></span>
                                 <span class="btn-inner--text">Generate Bukti Fisik Periode Terakhir</span>
                             </a>
@@ -127,7 +127,7 @@
                 if (type === 'display') {
                     const today = new Date(data);
                     const month = ["Januari", "Februari", "Naret", "April", "Mei", "Juni",
-                        "Juli", "Augustus", "September", "Oktober", "November", "Desember"
+                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
                     ];
                     return today.getDate() + ' ' + month[today.getMonth()] + ' ' + today.getFullYear();
                 }
@@ -173,6 +173,8 @@
             "render": function(data, type, row) {
                 return "<a target=\"_blank\" href=\"/IIB12/" + data + "/generate\" class=\"btn btn-outline-success  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
                     "<span class=\"btn-inner--icon\"><i class=\"fas fa-file-export\"></i></span></a>" +
+                    "<a target=\"_blank\" href=\"/IIB12/" + data + "/generate-approval\" class=\"btn btn-outline-warning  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
+                    "<span class=\"btn-inner--icon\"><i class=\"fas fa-file-invoice\"></i></span></a>" +
                     "<a href=\"/IIB12/" + data + "/edit\" class=\"btn btn-outline-info  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
                     "<span class=\"btn-inner--icon\"><i class=\"fas fa-edit\"></i></span></a>" +
                     "<form class=\"d-inline\" id=\"formdelete" + data + "\" name=\"formdelete" + data + "\" onsubmit=\"deleteactivity('" + data + "','" + row.title + "')\" method=\"POST\" action=\"/hdds/" + data + "\">" +

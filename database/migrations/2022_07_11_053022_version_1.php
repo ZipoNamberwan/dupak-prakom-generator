@@ -72,6 +72,8 @@ class Version1 extends Migration
             $table->text('action')->nullable();
             $table->text('documentation')->nullable();
             $table->text('approval_letter')->nullable();
+            $table->string('requester');
+            $table->text('problem_summary');
             $table->timestamps();
         });
     }
