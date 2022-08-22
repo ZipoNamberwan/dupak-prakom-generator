@@ -32,6 +32,13 @@ class Version1 extends Migration
             $table->id()->autoincrement();
             $table->string('name');
         });
+        Schema::create('supervisor', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->string('name');
+            $table->string('nip');
+            $table->string('pos');
+            $table->boolean('is_preference');
+        });
         Schema::create('unsur', function (Blueprint $table) {
             $table->id()->autoincrement();
             $table->string('code');
@@ -56,6 +63,7 @@ class Version1 extends Migration
             $table->foreignId('user_data_id')->constrained('user_data');
             $table->foreignId('location_id')->constrained('location');
             $table->foreignId('butir_kegiatan_id')->constrained('butir_kegiatan');
+            $table->foreignId('supervisor_id')->constrained('supervisor');
             //specific attribute
             $table->text('title');
             $table->date('time');

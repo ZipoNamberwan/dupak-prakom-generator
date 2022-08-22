@@ -31,4 +31,8 @@ class IIB12 extends Model
     {
         return $this->belongsTo(InfraType::class, 'infra_type_id');
     }
+    public function supervisorDetail()
+    {
+        return $this->belongsTo(Supervisor::class, 'supervisor_id');
+    }
 }

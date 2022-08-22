@@ -5,10 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Room extends Model
+class Supervisor extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $table = 'room';
+    protected $table = 'supervisor';
     public $timestamps = false;
 }

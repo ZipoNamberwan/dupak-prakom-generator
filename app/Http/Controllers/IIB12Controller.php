@@ -8,6 +8,7 @@ use App\Models\ButirKegiatan;
 use App\Models\IIB12;
 use App\Models\InfraType;
 use App\Models\Room;
+use App\Models\Supervisor;
 use App\Models\UserData;
 use Illuminate\Http\Request;
 
@@ -34,8 +35,16 @@ class IIB12Controller extends Controller
         $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
         $rooms = Room::all();
         $infratypes = InfraType::all();
+        $supervisors = Supervisor::all();
+        $preferredsp = Supervisor::where(['is_preference' => true])->first()->id;
 
-        return view('iib12/create-iib12', ['butirkeg' => $butirkegiatan, 'infratypes' => $infratypes, 'rooms' => $rooms]);
+        return view('iib12/create-iib12', [
+            'butirkeg' => $butirkegiatan,
+            'infratypes' => $infratypes,
+            'rooms' => $rooms,
+            'supervisors' => $supervisors,
+            'preferredsp' => $preferredsp,
+        ]);
     }
 
     /**
@@ -56,6 +65,7 @@ class IIB12Controller extends Controller
             'infrafunc' => 'required',
             'requester' => 'required',
             'problem_summary' => 'required',
+            'supervisor' => 'required',
         ]);
 
         $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
@@ -93,6 +103,7 @@ class IIB12Controller extends Controller
             'problem_summary' => $request->problem_summary,
             'documentation' => $docPath,
             'approval_letter' => $approvalLetterPath,
+            'supervisor_id' => $request->supervisor,
         ]);
 
         return redirect('/IIB12')->with('success-create', 'Butir Kegiatan II.B.12 telah ditambah!');
@@ -120,9 +131,16 @@ class IIB12Controller extends Controller
         $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
         $rooms = Room::all();
         $infratypes = InfraType::all();
+        $supervisors = Supervisor::all();
         $iib12 = IIB12::find($id);
 
-        return view('iib12/edit-iib12', ['butirkeg' => $butirkegiatan, 'infratypes' => $infratypes, 'rooms' => $rooms, 'iib12' => $iib12]);
+        return view('iib12/edit-iib12', [
+            'butirkeg' => $butirkegiatan,
+            'infratypes' => $infratypes,
+            'rooms' => $rooms,
+            'supervisors' => $supervisors,
+            'iib12' => $iib12
+        ]);
     }
 
     /**
@@ -144,6 +162,7 @@ class IIB12Controller extends Controller
             'infrafunc' => 'required',
             'requester' => 'required',
             'problem_summary' => 'required',
+            'supervisor' => 'required',
         ]);
 
         $docPath = '';
@@ -178,6 +197,7 @@ class IIB12Controller extends Controller
             'problem_summary' => $request->problem_summary,
             'documentation' => $docPath == '' ? $iib12->documentation : $docPath,
             'approval_letter' => $approvalLetterPath == '' ? $iib12->approval_letter : $approvalLetterPath,
+            'supervisor_id' => $request->supervisor,
         ]);
         $iib12->update($data);
 
@@ -263,6 +283,16 @@ class IIB12Controller extends Controller
     }
     public function generateApproval($id)
     {
-        return $id;
+        $processor = new HelpersTemplateProcessor();
+        $iib12 = array(IIB12::find($id));
+
+        return $processor->generateiib12ApprovalLetter($iib12);
+    }
+    public function generateApprovalByPeriode($id)
+    {
+        $processor = new HelpersTemplateProcessor();
+        $iib12 = array(IIB12::find($id));
+
+        return $processor->generateiib12ApprovalLetter($iib12);
     }
 }

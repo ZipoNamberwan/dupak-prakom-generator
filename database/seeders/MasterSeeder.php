@@ -7,6 +7,7 @@ use App\Models\InfraType;
 use App\Models\Location;
 use App\Models\Room;
 use App\Models\SubUnsur;
+use App\Models\Supervisor;
 use App\Models\Unsur;
 use App\Models\UserData;
 use Illuminate\Database\Seeder;
@@ -28,6 +29,13 @@ class MasterSeeder extends Seeder
                 'pos' => 'Pranata Komputer Ahli Pertama'
             ]
         );
+
+        Supervisor::create([
+            'name' => 'Syaiful Rahman, S.E, M.T',
+            'nip' => '19640621 198802 1 001',
+            'pos' => 'Kepala BPS Kabupaten Probolinggo',
+            'is_preference' => true
+        ]);
 
         Location::create([
             'name' => 'BPS Kabupaten Probolinggo',
