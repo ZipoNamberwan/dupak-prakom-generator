@@ -27,3 +27,18 @@ Route::put('/IIB12/{id}', [App\Http\Controllers\IIB12Controller::class, 'update'
 Route::get('/IIB12/{id}/edit', [App\Http\Controllers\IIB12Controller::class, 'edit']);
 Route::get('/IIB12/{id}/generate', [App\Http\Controllers\IIB12Controller::class, 'generate']);
 Route::get('/IIB12/{id}/generate-approval', [App\Http\Controllers\IIB12Controller::class, 'generateApproval']);
+
+Route::get('/IIB9', [App\Http\Controllers\IIB9Controller::class, 'index']);
+Route::post('/IIB9', [App\Http\Controllers\IIB9Controller::class, 'store']);
+Route::get('/IIB9/data', [App\Http\Controllers\IIB9Controller::class, 'getData']);
+Route::get('/IIB9/create', [App\Http\Controllers\IIB9Controller::class, 'create']);
+Route::get('/IIB9/show-generate-by-periode', [App\Http\Controllers\IIB9Controller::class, 'showGenerateByPeriode']);
+Route::get('/IIB9/show-generate-approval-by-periode', [App\Http\Controllers\IIB9Controller::class, 'showGenerateApprovalByPeriode']);
+Route::get('/IIB9/generate-by-periode/{periode?}', [App\Http\Controllers\IIB9Controller::class, 'generateByPeriode']);
+Route::get('/IIB9/generate-approval-by-periode/{periode?}', [App\Http\Controllers\IIB9Controller::class, 'generateApprovalByPeriode']);
+Route::delete('/IIB9/{id}', [App\Http\Controllers\IIB9Controller::class, 'destroy']);
+Route::get('/IIB9/{id}', [App\Http\Controllers\IIB9Controller::class, 'show']);
+Route::put('/IIB9/{id}', [App\Http\Controllers\IIB9Controller::class, 'update']);
+Route::get('/IIB9/{id}/edit', [App\Http\Controllers\IIB9Controller::class, 'edit']);
+Route::get('/IIB9/{id}/generate', [App\Http\Controllers\IIB9Controller::class, 'generate']);
+Route::get('/IIB9/{id}/generate-approval', [App\Http\Controllers\IIB9Controller::class, 'generateApproval']);

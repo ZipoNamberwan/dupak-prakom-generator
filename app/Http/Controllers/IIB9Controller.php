@@ -6,14 +6,14 @@ use App\Helpers\TemplateContentProcessor;
 use App\Helpers\TemplateProcessor;
 use App\Helpers\Utilities;
 use App\Models\ButirKegiatan;
-use App\Models\IIB12;
+use App\Models\IIB9;
 use App\Models\InfraType;
 use App\Models\Room;
 use App\Models\Supervisor;
 use App\Models\UserData;
 use Illuminate\Http\Request;
 
-class IIB12Controller extends Controller
+class IIB9Controller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -22,8 +22,8 @@ class IIB12Controller extends Controller
      */
     public function index()
     {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
-        return view('iib12/index-iib12', ['butirkeg' => $butirkegiatan, 'infratypes' => InfraType::all()]);
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.9'])->first();
+        return view('iib9/index-iib9', ['butirkeg' => $butirkegiatan, 'infratypes' => InfraType::all()]);
     }
 
     /**
@@ -33,13 +33,13 @@ class IIB12Controller extends Controller
      */
     public function create()
     {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.9'])->first();
         $rooms = Room::all();
         $infratypes = InfraType::all();
         $supervisors = Supervisor::all();
         $preferredsp = Supervisor::where(['is_preference' => true])->first()->id;
 
-        return view('iib12/create-iib12', [
+        return view('iib9/create-iib9', [
             'butirkeg' => $butirkegiatan,
             'infratypes' => $infratypes,
             'rooms' => $rooms,
@@ -57,7 +57,6 @@ class IIB12Controller extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'type' => 'required',
             'title' => 'required',
             'date' => 'required',
             'room' => 'required',
@@ -65,11 +64,13 @@ class IIB12Controller extends Controller
             'infratype' => 'required',
             'infrafunc' => 'required',
             'requester' => 'required',
-            'problem_summary' => 'required',
+            'background' => 'required',
+            'step' => 'required',
+            'summary' => 'required',
             'supervisor' => 'required',
         ]);
 
-        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.9'])->first();
 
         $docPath = null;
         if ($request->hasFile('documentation')) {
@@ -81,33 +82,28 @@ class IIB12Controller extends Controller
             $approvalLetterPath = $request->file('approval_letter')->store('images', 'public');
         }
 
-        IIB12::create([
+        IIB9::create([
             'title' => $request->title,
-            'type' => $request->type,
             'time' => $request->date,
             'room_id' => $request->room,
             'infra_name' => $request->infraname,
             'infra_type_id' => $request->infratype,
             'infra_func' => $request->infrafunc,
             'background' => $request->background,
-            'problem_ident' => $request->problem_ident,
-            'problem_analysis' => $request->problem_analysis,
-            'result_ident' => $request->result_ident,
-            'solution' => $request->solution,
-            'action' => $request->action,
+            'step' => $request->step,
+            'summary' => $request->summary,
             'documentation' => $request->documentation,
             'approval_letter' => $request->approval_letter,
             'user_data_id' => 1,
             'location_id' => 1,
             'butir_kegiatan_id' => $butirkegiatan->id,
             'requester' => $request->requester,
-            'problem_summary' => $request->problem_summary,
             'documentation' => $docPath,
             'approval_letter' => $approvalLetterPath,
             'supervisor_id' => $request->supervisor,
         ]);
 
-        return redirect('/IIB12')->with('success-create', 'Butir Kegiatan II.B.12 telah ditambah!');
+        return redirect('/IIB9')->with('success-create', 'Butir Kegiatan II.B.9 telah ditambah!');
     }
 
     /**
@@ -129,18 +125,18 @@ class IIB12Controller extends Controller
      */
     public function edit($id)
     {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.9'])->first();
         $rooms = Room::all();
         $infratypes = InfraType::all();
         $supervisors = Supervisor::all();
-        $iib12 = IIB12::find($id);
+        $iib9 = IIB9::find($id);
 
-        return view('iib12/edit-iib12', [
+        return view('iib9/edit-iib9', [
             'butirkeg' => $butirkegiatan,
             'infratypes' => $infratypes,
             'rooms' => $rooms,
             'supervisors' => $supervisors,
-            'iib12' => $iib12
+            'iib9' => $iib9
         ]);
     }
 
@@ -154,7 +150,6 @@ class IIB12Controller extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'type' => 'required',
             'title' => 'required',
             'date' => 'required',
             'room' => 'required',
@@ -162,7 +157,9 @@ class IIB12Controller extends Controller
             'infratype' => 'required',
             'infrafunc' => 'required',
             'requester' => 'required',
-            'problem_summary' => 'required',
+            'background' => 'required',
+            'step' => 'required',
+            'summary' => 'required',
             'supervisor' => 'required',
         ]);
 
@@ -177,30 +174,25 @@ class IIB12Controller extends Controller
             $approvalLetterPath = $image->store('images', 'public');
         }
 
-        $iib12 = IIB12::find($id);
+        $iib9 = IIB9::find($id);
         $data = ([
             'title' => $request->title,
-            'type' => $request->type,
             'time' => $request->date,
             'room_id' => $request->room,
             'infra_name' => $request->infraname,
             'infra_type_id' => $request->infratype,
             'infra_func' => $request->infrafunc,
             'background' => $request->background,
-            'problem_ident' => $request->problem_ident,
-            'problem_analysis' => $request->problem_analysis,
-            'result_ident' => $request->result_ident,
-            'solution' => $request->solution,
-            'action' => $request->action,
+            'step' => $request->step,
+            'summary' => $request->summary,
             'requester' => $request->requester,
-            'problem_summary' => $request->problem_summary,
-            'documentation' => $docPath == '' ? $iib12->documentation : $docPath,
-            'approval_letter' => $approvalLetterPath == '' ? $iib12->approval_letter : $approvalLetterPath,
+            'documentation' => $docPath == '' ? $iib9->documentation : $docPath,
+            'approval_letter' => $approvalLetterPath == '' ? $iib9->approval_letter : $approvalLetterPath,
             'supervisor_id' => $request->supervisor,
         ]);
-        $iib12->update($data);
+        $iib9->update($data);
 
-        return redirect('/IIB12')->with('success-create', 'Data Bukti Fisik telah diubah!');
+        return redirect('/IIB9')->with('success-create', 'Data Bukti Fisik telah diubah!');
     }
 
     /**
@@ -211,15 +203,15 @@ class IIB12Controller extends Controller
      */
     public function destroy($id)
     {
-        $iib12 = IIB12::find($id);
-        $iib12->delete();
-        return redirect('/IIB12')->with('success-delete', 'Data Butir Kegiatan telah dihapus!');
+        $iib9 = IIB9::find($id);
+        $iib9->delete();
+        return redirect('/IIB9')->with('success-delete', 'Data Butir Kegiatan telah dihapus!');
     }
 
     public function getData(Request $request)
     {
-        $recordsTotal = IIB12::count();
-        $recordsFiltered = IIB12::where('title', 'like', '%' . $request->search["value"] . '%')
+        $recordsTotal = IIB9::count();
+        $recordsFiltered = IIB9::where('title', 'like', '%' . $request->search["value"] . '%')
             ->count();
 
         $orderColumn = 'time';
@@ -236,7 +228,7 @@ class IIB12Controller extends Controller
                 $orderColumn = 'time';
             }
         }
-        $activities = IIB12::where('title', 'like', '%' . $request->search["value"] . '%')
+        $activities = IIB9::where('title', 'like', '%' . $request->search["value"] . '%')
             ->orderByRaw($orderColumn . ' ' . $orderDir)
             ->skip($request->start)
             ->take($request->length)
@@ -265,12 +257,20 @@ class IIB12Controller extends Controller
     public function generate($id)
     {
         $user = UserData::find(1);
-        $iib12 = array(IIB12::find($id));
+        $iib9 = array(IIB9::find($id));
 
         $processor = new TemplateProcessor();
-        $processor->generateWordFile($user, $iib12, function ($phpWord, $table, $iib12) {
-            TemplateContentProcessor::generateIIB12WordContent($phpWord, $table, $iib12);
+        $processor->generateWordFile($user, $iib9, function ($phpWord, $table, $iib9) {
+            TemplateContentProcessor::generateIIB9WordContent($phpWord, $table, $iib9);
         });
+    }
+
+    public function generateApproval($id)
+    {
+        $processor = new TemplateProcessor();
+        $iib9 = array(IIB9::find($id));
+
+        return $processor->generateiib9ApprovalLetter($iib9);
     }
 
     public function generateByPeriode(Request $request)
@@ -287,22 +287,14 @@ class IIB12Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $iib12 = IIB12::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+        $iib9 = IIB9::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
 
-        if (count($iib12) > 0) {
+        if (count($iib9) > 0) {
             $processor = new TemplateProcessor();
-            $processor->generateWordFile($user, $iib12, function ($phpWord, $table, $iib12) {
-                TemplateContentProcessor::generateIIB12WordContent($phpWord, $table, $iib12);
+            $processor->generateWordFile($user, $iib9, function ($phpWord, $table, $iib9) {
+                TemplateContentProcessor::generateIIB9WordContent($phpWord, $table, $iib9);
             });
         }
-    }
-
-    public function generateApproval($id)
-    {
-        $processor = new TemplateProcessor();
-        $iib12 = array(IIB12::find($id));
-
-        return $processor->generateiib12ApprovalLetter($iib12);
     }
 
     public function generateApprovalByPeriode(Request $request)
@@ -319,33 +311,11 @@ class IIB12Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $iib12 = IIB12::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+        $iib9 = IIB9::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
 
-        if (count($iib12) > 0) {
+        if (count($iib9) > 0) {
             $processor = new TemplateProcessor();
-            $processor->generateiib12ApprovalLetter($iib12);
+            $processor->generateiib9ApprovalLetter($iib9);
         }
-    }
-
-    public function showGenerateByPeriode()
-    {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
-        $dupakperiod = Utilities::getAllPeriodeToDate();
-
-        return view('iib12/generate-periode-iib12', [
-            'butirkeg' => $butirkegiatan,
-            'periodes' => $dupakperiod
-        ]);
-    }
-
-    public function showGenerateApprovalByPeriode()
-    {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
-        $dupakperiod = Utilities::getAllPeriodeToDate();
-
-        return view('iib12/generate-approval-periode-iib12', [
-            'butirkeg' => $butirkegiatan,
-            'periodes' => $dupakperiod
-        ]);
     }
 }

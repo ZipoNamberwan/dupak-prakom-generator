@@ -169,4 +169,57 @@ class TemplateProcessor
         $xmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($this->phpWord, 'Word2007');
         $xmlWriter->save("php://output");
     }
+
+    public function generateiib9ApprovalLetter($activities)
+    {
+        $this->phpWord->setDefaultFontSize(11);
+        $this->phpWord->setDefaultFontName('calibri');
+        $this->phpWord->addParagraphStyle('normal', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 0));
+        $this->phpWord->addFontStyle('title', array('size' => 20, 'bold' => true));
+
+        $this->phpWord->addNumberingStyle(
+            'multilevel',
+            array(
+                'type' => 'multilevel',
+                'levels' => array(
+                    array('format' => 'decimal', 'text' => '%1.', 'left' => 720, 'hanging' => 360, 'tabPos' => 360),
+                    array('format' => 'upperLetter', 'text' => '%2.', 'left' => 1080, 'hanging' => 360, 'tabPos' => 720),
+                )
+            )
+        );
+
+        foreach ($activities as $a) {
+            $section = $this->phpWord->addSection();
+            $section->addText(
+                'Lembar Persetujuan Pemasangan Infrastruktur TI',
+                array('bold' => true, 'size' => 17),
+                array('alignment' => Jc::CENTER)
+            );
+            $section->addTextBreak();
+            $section->addText('Infrastruktur TI berikut:', null, 'normal');
+            $section->addListItem('Nama Infrastruktur' . "\t\t\t" . ': ' . $a->infra_name, 0, null, 'multilevel', 'normal');
+            $section->addListItem('Jenis Infrastruktur' . "\t\t\t" . ': ' . $a->infraTypeDetail->name, 0, null, 'multilevel', 'normal');
+            $section->addListItem('Lokasi Infrastruktur' . "\t\t\t" . ': ' . $a->roomDetail->name, 0, null, 'multilevel', 'normal');
+
+            $section->addText('pada tanggal ' . date("d F Y", strtotime($a->time)) . ', Tim IT (' . $a->userDataDetail->name . ') telah melakukan pemasangan infrastruktur IT tersebut.', null, 'normal');
+
+            $section->addTextBreak();
+
+            $section->addText('Yang Menyatakan,', null, array('indent' => 6, 'alignment' => Jc::CENTER));
+            $section->addText('Pemegang Infrastruktur', null, array('indent' => 6, 'alignment' => Jc::CENTER));
+            $section->addTextBreak();
+            $section->addTextBreak();
+            $section->addText($a->requester, null, array('indent' => 6, 'alignment' => Jc::CENTER));
+        }
+
+        $file =  'Lembar Persetujuan ' . $activities[0]->butirKegiatanDetail->code . '.docx';
+        header("Content-Description: File Transfer");
+        header('Content-Disposition: attachment; filename="' . $file . '"');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        header('Content-Transfer-Encoding: binary');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Expires: 0');
+        $xmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($this->phpWord, 'Word2007');
+        $xmlWriter->save("php://output");
+    }
 }

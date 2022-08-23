@@ -56,4 +56,53 @@ class TemplateContentProcessor
             );
         //content close here
     }
+
+    public static function generateIIB9WordContent($phpWord, $table, $iib9)
+    {
+        //content here
+        $phpWord->addParagraphStyle('normalContent', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 0.5));
+        $phpWord->addParagraphStyle('normalContentIndent1', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 1));
+        $phpWord->addNumberingStyle(
+            'numbering',
+            array(
+                'type'   => 'multilevel',
+                'levels' => array(
+                    array('format' => 'decimal', 'text' => '%1.', 'left' => 360, 'hanging' => 360, 'tabPos' => 360),
+                    array('format' => 'bullet', 'text' => '●', 'left' => 720, 'hanging' => 360, 'tabPos' => 720),
+                ),
+            )
+        );
+        $cell = $table->addCell(10000, array('gridSpan' => 4, 'valign' => 'top'));
+        $cell->addListItem('Latar Belakang dan Tujuan Pemasangan', 0, null, 'numbering');
+        $cell->addText(Utilities::transformHTMLToWord($iib9->background), null, 'normalContent');
+        $cell->addListItem('Waktu dan Lokasi', 0, null, 'numbering');
+        $cell->addText(date("d F Y", strtotime($iib9->time)) . ' di ' . $iib9->roomDetail->name, null, 'normalContent');
+        $cell->addListItem('Nama Infrastruktur TI', 0, null, 'numbering');
+        $cell->addText($iib9->infraTypeDetail->name . ' ' . $iib9->infra_name, null, 'normalContent');
+        $cell->addListItem('Tahapan', 0, null, 'numbering');
+        $cell->addText(Utilities::transformHTMLToWord($iib9->step), null, 'normalContent');
+        $cell->addListItem('Kesimpulan', 0, null, 'numbering');
+        $cell->addText(Utilities::transformHTMLToWord($iib9->summary), null, 'normalContent');
+
+        $cell->addListItem('Bukti Instalasi', 0, $iib9->documentation == null ? array('color' => 'ff0000') : null, 'numbering');
+        if ($iib9->documentation != null)
+            $cell->addImage(
+                'storage/' . $iib9->documentation,
+                array(
+                    'height' => 300,
+                    'wrappingStyle' => 'behind',
+                )
+            );
+        $cell->addListItem('Lembar Persetujuan', 0, $iib9->approval_letter == null ? array('color' => 'ff0000') : null, 'numbering');
+        $cell->addText('Scan', $iib9->approval_letter == null ? array('color' => 'ff0000') : null, 'normalContent');
+        if ($iib9->approval_letter != null)
+            $cell->addImage(
+                'storage/' . $iib9->approval_letter,
+                array(
+                    'height' => 300,
+                    'wrappingStyle' => 'behind',
+                )
+            );
+        //content close here    }
+    }
 }

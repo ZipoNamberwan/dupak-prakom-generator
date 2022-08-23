@@ -87,6 +87,13 @@ class MasterSeeder extends Seeder
             'credit' => 0.02
         ]);
 
+        ButirKegiatan::create([
+            'name' => 'Melakukan Pemasangan Infrastruktur TI',
+            'code' => 'II.B.9',
+            'subunsur_id' => $subunsur->id,
+            'credit' => 0.165
+        ]);
+
         InfraType::create(
             ['name' => 'Komputer']
         );

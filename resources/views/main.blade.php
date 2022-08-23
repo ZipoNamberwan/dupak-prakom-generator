@@ -62,24 +62,56 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#navbar-components" data-toggle="collapse" role="button" aria-expanded="false" aria-controls="navbar-components">
+                            <a class="nav-link @if(str_contains(url()->current(), url('/II'))) active @endif" href="#navbar-components" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-components">
                                 <i class="ni ni-ui-04 text-info"></i>
                                 <span class="nav-link-text">II. Infrastruktur Teknologi Informasi</span>
                             </a>
-                            <div class="collapse" id="navbar-components">
+                            <div class="collapse @if(str_contains(url()->current(), url('/II'))) show @endif" id="navbar-components">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
-                                        <a href="#navbar-multilevel" class="nav-link" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-multilevel">II.B.12 Deteksi dan Perbaikan Infrastruktur TI</a>
-                                        <div class="collapse show" id="navbar-multilevel">
+                                        <a href="#IIB8" class="nav-link @if(str_contains(url()->current(), url('/IIB8'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IIB8">II.B.8 Pemeliharaan Infrastruktur TI</a>
+                                        <div class="collapse @if(str_contains(url()->current(), url('/IIB8'))) show @endif" id="IIB8">
                                             <ul class="nav nav-sm flex-column">
                                                 <li class="nav-item">
-                                                    <a href="/IIB12" class="nav-link ">Daftar Kegiatan</a>
+                                                    <a href="/IIB8" class="nav-link @if(url()->current() == url('/').'/IIB8') active @endif">Daftar Kegiatan</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="/IIB12/show-generate-by-periode" class="nav-link ">Generate Bukti Fisik</a>
+                                                    <a href="/IIB8/show-generate-by-periode" class="nav-link @if(url()->current() == url('/').'/IIB8/show-generate-by-periode') active @endif">Generate Bukti Fisik</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="/IIB12/show-generate-approval-by-periode" class="nav-link ">Generate Lembar Persetujuan</a>
+                                                    <a href="/IIB8/show-generate-approval-by-periode" class="nav-link @if(url()->current() == url('/').'/IIB8/show-generate-approval-by-periode') active @endif">Generate Lembar Persetujuan</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#IIB9" class="nav-link @if(str_contains(url()->current(), url('/IIB9'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IIB9">II.B.9 Pemasangan Infrastruktur TI</a>
+                                        <div class="collapse @if(str_contains(url()->current(), url('/IIB9'))) show @endif" id="IIB9">
+                                            <ul class="nav nav-sm flex-column">
+                                                <li class="nav-item">
+                                                    <a href="/IIB9" class="nav-link @if(url()->current() == url('/').'/IIB9') active @endif">Daftar Kegiatan</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/IIB9/show-generate-by-periode" class="nav-link @if(url()->current() == url('/').'/IIB9/show-generate-by-periode') active @endif">Generate Bukti Fisik</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/IIB9/show-generate-approval-by-periode" class="nav-link @if(url()->current() == url('/').'/IIB9/show-generate-approval-by-periode') active @endif">Generate Lembar Persetujuan</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="#IIB12" class="nav-link @if(str_contains(url()->current(), url('/IIB12'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IIB12">II.B.12 Deteksi dan Perbaikan Infrastruktur TI</a>
+                                        <div class="collapse @if(str_contains(url()->current(), url('/IIB12'))) show @endif" id="IIB12">
+                                            <ul class="nav nav-sm flex-column">
+                                                <li class="nav-item">
+                                                    <a href="/IIB12" class="nav-link @if(url()->current() == url('/').'/IIB12') active @endif">Daftar Kegiatan</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/IIB12/show-generate-by-periode" class="nav-link @if(url()->current() == url('/').'/IIB12/show-generate-by-periode') active @endif">Generate Bukti Fisik</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/IIB12/show-generate-approval-by-periode" class="nav-link @if(url()->current() == url('/').'/IIB12/show-generate-approval-by-periode') active @endif">Generate Lembar Persetujuan</a>
                                                 </li>
                                             </ul>
                                         </div>

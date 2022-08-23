@@ -260,7 +260,7 @@
                                 </div>
                                 <div class="col-md-3 mb-5 mt-2">
                                     <label class="form-control-label">Pejabat Penanda Tangan</label>
-                                    <select id="supervisor" name="supervisor" class="form-control" data-toggle="select" onchange="refreshAutoTitle()">
+                                    <select id="supervisor" name="supervisor" class="form-control" data-toggle="select">
                                         <!-- <option value="0" disabled selected>Pilih Pejabat Penanda Tangan</option> -->
                                         @foreach ($supervisors as $supervisor)
                                         <option value="{{ $supervisor->id }}" {{ old('supervisor', $preferredsp) == $supervisor->id ? 'selected' : '' }}>
