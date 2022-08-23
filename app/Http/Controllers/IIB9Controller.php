@@ -318,4 +318,26 @@ class IIB9Controller extends Controller
             $processor->generateiib9ApprovalLetter($iib9);
         }
     }
+
+    public function showGenerateByPeriode()
+    {
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.9'])->first();
+        $dupakperiod = Utilities::getAllPeriodeToDate();
+
+        return view('iib9/generate-periode-iib9', [
+            'butirkeg' => $butirkegiatan,
+            'periodes' => $dupakperiod
+        ]);
+    }
+
+    public function showGenerateApprovalByPeriode()
+    {
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.9'])->first();
+        $dupakperiod = Utilities::getAllPeriodeToDate();
+
+        return view('iib9/generate-approval-periode-iib9', [
+            'butirkeg' => $butirkegiatan,
+            'periodes' => $dupakperiod
+        ]);
+    }
 }
