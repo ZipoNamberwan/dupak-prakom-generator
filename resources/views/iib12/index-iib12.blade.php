@@ -177,7 +177,7 @@
                     "<span class=\"btn-inner--icon\"><i class=\"fas fa-file-invoice\"></i></span></a>" +
                     "<a href=\"/IIB12/" + data + "/edit\" class=\"btn btn-outline-info  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
                     "<span class=\"btn-inner--icon\"><i class=\"fas fa-edit\"></i></span></a>" +
-                    "<form class=\"d-inline\" id=\"formdelete" + data + "\" name=\"formdelete" + data + "\" onsubmit=\"deleteactivity('" + data + "','" + row.title + "')\" method=\"POST\" action=\"/hdds/" + data + "\">" +
+                    "<form class=\"d-inline\" id=\"formdelete" + data + "\" name=\"formdelete" + data + "\" onsubmit=\"deleteactivity('" + data + "','" + row.title + "')\" method=\"POST\" action=\"/IIB12/" + data + "\">" +
                     '@method("delete")' +
                     '@csrf' +
                     "<button class=\"btn btn-icon btn-outline-danger btn-sm\" type=\"submit\" data-toggle=\"tooltip\" data-original-title=\"Hapus Data\">" +

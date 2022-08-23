@@ -4,12 +4,16 @@ namespace App\Http\Controllers;
 
 use App\Helpers\TemplateContentProcessor;
 use App\Helpers\TemplateProcessor as HelpersTemplateProcessor;
+use App\Helpers\Utilities;
 use App\Models\ButirKegiatan;
 use App\Models\IIB12;
 use App\Models\InfraType;
 use App\Models\Room;
 use App\Models\Supervisor;
 use App\Models\UserData;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use Illuminate\Http\Request;
 
 class IIB12Controller extends Controller
@@ -212,7 +216,9 @@ class IIB12Controller extends Controller
      */
     public function destroy($id)
     {
-        //
+        $iib12 = IIB12::find($id);
+        $iib12->delete();
+        return redirect('/IIB12')->with('success-delete', 'Data Butir Kegiatan telah dihapus!');
     }
 
     public function getData(Request $request)
@@ -271,15 +277,28 @@ class IIB12Controller extends Controller
             TemplateContentProcessor::generateIIB12WordContent($phpWord, $table, $iib12);
         });
     }
-    public function generateByPeriode()
+    public function generateByPeriode(Request $request)
     {
+        $begin = null;
+        $end = null;
+        if ($request->periode != null) {
+            $periodeJson = json_decode($request->periode, true);
+            $begin = $periodeJson[0];
+            $end = $periodeJson[1];
+        } else {
+            $thisPeriod = Utilities::getSemesterPeriode(date('Y-m-d', strtotime('-6 months')));
+            $begin = $thisPeriod[0];
+            $end = $thisPeriod[1];
+        }
         $user = UserData::find(1);
-        $iib12 = IIB12::all();
+        $iib12 = IIB12::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
 
-        $processor = new HelpersTemplateProcessor();
-        $processor->generateWordFile($user, $iib12, function ($phpWord, $table, $iib12) {
-            TemplateContentProcessor::generateIIB12WordContent($phpWord, $table, $iib12);
-        });
+        if (count($iib12) > 0) {
+            $processor = new HelpersTemplateProcessor();
+            $processor->generateWordFile($user, $iib12, function ($phpWord, $table, $iib12) {
+                TemplateContentProcessor::generateIIB12WordContent($phpWord, $table, $iib12);
+            });
+        }
     }
     public function generateApproval($id)
     {
@@ -288,11 +307,47 @@ class IIB12Controller extends Controller
 
         return $processor->generateiib12ApprovalLetter($iib12);
     }
-    public function generateApprovalByPeriode($id)
+    public function generateApprovalByPeriode(Request $request)
     {
-        $processor = new HelpersTemplateProcessor();
-        $iib12 = array(IIB12::find($id));
+        $begin = null;
+        $end = null;
+        if ($request->periode != null) {
+            $periodeJson = json_decode($request->periode, true);
+            $begin = $periodeJson[0];
+            $end = $periodeJson[1];
+        } else {
+            $thisPeriod = Utilities::getSemesterPeriode(date('Y-m-d', strtotime('-6 months')));
+            $begin = $thisPeriod[0];
+            $end = $thisPeriod[1];
+        }
+        $user = UserData::find(1);
+        $iib12 = IIB12::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
 
-        return $processor->generateiib12ApprovalLetter($iib12);
+        if (count($iib12) > 0) {
+            $processor = new HelpersTemplateProcessor();
+            $processor->generateiib12ApprovalLetter($iib12);
+        }
+    }
+
+    public function showGenerateByPeriode()
+    {
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
+        $dupakperiod = Utilities::getAllPeriodeToDate();
+
+        return view('iib12/generate-periode-iib12', [
+            'butirkeg' => $butirkegiatan,
+            'periodes' => $dupakperiod
+        ]);
+    }
+
+    public function showGenerateApprovalByPeriode()
+    {
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
+        $dupakperiod = Utilities::getAllPeriodeToDate();
+
+        return view('iib12/generate-approval-periode-iib12', [
+            'butirkeg' => $butirkegiatan,
+            'periodes' => $dupakperiod
+        ]);
     }
 }

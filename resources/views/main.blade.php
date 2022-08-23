@@ -76,7 +76,10 @@
                                                     <a href="/IIB12" class="nav-link ">Daftar Kegiatan</a>
                                                 </li>
                                                 <li class="nav-item">
-                                                    <a href="#!" class="nav-link ">Generate Lembar Persetujuan</a>
+                                                    <a href="/IIB12/show-generate-by-periode" class="nav-link ">Generate Bukti Fisik</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/IIB12/show-generate-approval-by-periode" class="nav-link ">Generate Lembar Persetujuan</a>
                                                 </li>
                                             </ul>
                                         </div>
