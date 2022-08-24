@@ -69,29 +69,49 @@ class MasterSeeder extends Seeder
             'name' => 'Lobby',
         ]);
 
-        $unsur = Unsur::create([
+        $ii = Unsur::create([
             'name' => 'Infrastruktur Teknologi Informasi',
             'code' => 'II'
         ]);
+        $i = Unsur::create([
+            'name' => 'Infrastruktur Teknologi Informasi',
+            'code' => 'I'
+        ]);
 
-        $subunsur = SubUnsur::create([
+        $iib = SubUnsur::create([
             'name' => 'Manajemen Infrastruktur TI',
             'code' => 'II.B',
-            'unsur_id' => $unsur->id
+            'unsur_id' => $ii->id
+        ]);
+        $ic = SubUnsur::create([
+            'name' => 'Pengelolaan Data (Data Management)',
+            'code' => 'I.C',
+            'unsur_id' => $i->id
         ]);
 
         ButirKegiatan::create([
             'name' => 'Melakukan Deteksi Dan Atau Perbaikan Terhadap Permasalahan Infrastruktur TI',
             'code' => 'II.B.12',
-            'subunsur_id' => $subunsur->id,
+            'subunsur_id' => $iib->id,
             'credit' => 0.02
         ]);
-
         ButirKegiatan::create([
             'name' => 'Melakukan Pemasangan Infrastruktur TI',
             'code' => 'II.B.9',
-            'subunsur_id' => $subunsur->id,
+            'subunsur_id' => $iib->id,
             'credit' => 0.165
+        ]);
+        ButirKegiatan::create([
+            'name' => 'Melakukan Pemeliharaan Infrastruktur TI',
+            'code' => 'II.B.8',
+            'subunsur_id' => $iib->id,
+            'credit' => 0.060
+        ]);
+        ButirKegiatan::create([
+            'name' => 'Melakukan Backup Atau Pemulihan Data',
+            'code' => 'I.C.39',
+            'subunsur_id' => $ic->id,
+            'credit' => 0.020
         ]);
 
         InfraType::create(

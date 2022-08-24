@@ -120,18 +120,17 @@ class TemplateProcessor
         $this->phpWord->addParagraphStyle('normal', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 0));
         $this->phpWord->addFontStyle('title', array('size' => 20, 'bold' => true));
 
-        $this->phpWord->addNumberingStyle(
-            'multilevel',
-            array(
-                'type' => 'multilevel',
-                'levels' => array(
-                    array('format' => 'decimal', 'text' => '%1.', 'left' => 720, 'hanging' => 360, 'tabPos' => 360),
-                    array('format' => 'upperLetter', 'text' => '%2.', 'left' => 1080, 'hanging' => 360, 'tabPos' => 720),
-                )
-            )
-        );
-
         foreach ($activities as $a) {
+            $this->phpWord->addNumberingStyle(
+                'multilevel' . $a->id,
+                array(
+                    'type' => 'multilevel',
+                    'levels' => array(
+                        array('format' => 'decimal', 'text' => '%1.', 'left' => 720, 'hanging' => 360, 'tabPos' => 360),
+                        array('format' => 'upperLetter', 'text' => '%2.', 'left' => 1080, 'hanging' => 360, 'tabPos' => 720),
+                    )
+                )
+            );
             $section = $this->phpWord->addSection();
             $section->addText(
                 $a->type == 'detect' ? 'Lembar Persetujuan Deteksi Masalah Infrastruktur TI'
@@ -141,9 +140,9 @@ class TemplateProcessor
             );
             $section->addTextBreak();
             $section->addText('Infrastruktur TI berikut:', null, 'normal');
-            $section->addListItem('Nama Infrastruktur' . "\t\t\t" . ': ' . $a->infra_name, 0, null, 'multilevel', 'normal');
-            $section->addListItem('Jenis Infrastruktur' . "\t\t\t" . ': ' . $a->infraTypeDetail->name, 0, null, 'multilevel', 'normal');
-            $section->addListItem('Lokasi Infrastruktur' . "\t\t\t" . ': ' . $a->roomDetail->name, 0, null, 'multilevel', 'normal');
+            $section->addListItem('Nama Infrastruktur' . "\t\t\t" . ': ' . $a->infra_name, 0, null, 'multilevel' . $a->id, 'normal');
+            $section->addListItem('Jenis Infrastruktur' . "\t\t\t" . ': ' . $a->infraTypeDetail->name, 0, null, 'multilevel' . $a->id, 'normal');
+            $section->addListItem('Lokasi Infrastruktur' . "\t\t\t" . ': ' . $a->roomDetail->name, 0, null, 'multilevel' . $a->id, 'normal');
 
             if ($a->type == 'detect') {
                 $section->addText('pada tanggal ' . date("d F Y", strtotime($a->time)) . ', Tim IT (' . $a->userDataDetail->name . ') telah mendeteksi dan menganalisis permasalahannya yaitu ' . $a->problem_summary . '.', null, 'normal');
@@ -177,18 +176,17 @@ class TemplateProcessor
         $this->phpWord->addParagraphStyle('normal', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 0));
         $this->phpWord->addFontStyle('title', array('size' => 20, 'bold' => true));
 
-        $this->phpWord->addNumberingStyle(
-            'multilevel',
-            array(
-                'type' => 'multilevel',
-                'levels' => array(
-                    array('format' => 'decimal', 'text' => '%1.', 'left' => 720, 'hanging' => 360, 'tabPos' => 360),
-                    array('format' => 'upperLetter', 'text' => '%2.', 'left' => 1080, 'hanging' => 360, 'tabPos' => 720),
-                )
-            )
-        );
-
         foreach ($activities as $a) {
+            $this->phpWord->addNumberingStyle(
+                'multilevel' . $a->id,
+                array(
+                    'type' => 'multilevel',
+                    'levels' => array(
+                        array('format' => 'decimal', 'text' => '%1.', 'left' => 720, 'hanging' => 360, 'tabPos' => 360),
+                        array('format' => 'upperLetter', 'text' => '%2.', 'left' => 1080, 'hanging' => 360, 'tabPos' => 720),
+                    )
+                )
+            );
             $section = $this->phpWord->addSection();
             $section->addText(
                 'Lembar Persetujuan Pemasangan Infrastruktur TI',
@@ -197,9 +195,9 @@ class TemplateProcessor
             );
             $section->addTextBreak();
             $section->addText('Infrastruktur TI berikut:', null, 'normal');
-            $section->addListItem('Nama Infrastruktur' . "\t\t\t" . ': ' . $a->infra_name, 0, null, 'multilevel', 'normal');
-            $section->addListItem('Jenis Infrastruktur' . "\t\t\t" . ': ' . $a->infraTypeDetail->name, 0, null, 'multilevel', 'normal');
-            $section->addListItem('Lokasi Infrastruktur' . "\t\t\t" . ': ' . $a->roomDetail->name, 0, null, 'multilevel', 'normal');
+            $section->addListItem('Nama Infrastruktur' . "\t\t\t" . ': ' . $a->infra_name, 0, null, 'multilevel' . $a->id, 'normal');
+            $section->addListItem('Jenis Infrastruktur' . "\t\t\t" . ': ' . $a->infraTypeDetail->name, 0, null, 'multilevel' . $a->id, 'normal');
+            $section->addListItem('Lokasi Infrastruktur' . "\t\t\t" . ': ' . $a->roomDetail->name, 0, null, 'multilevel' . $a->id, 'normal');
 
             $section->addText('pada tanggal ' . date("d F Y", strtotime($a->time)) . ', Tim IT (' . $a->userDataDetail->name . ') telah melakukan pemasangan infrastruktur IT tersebut.', null, 'normal');
 

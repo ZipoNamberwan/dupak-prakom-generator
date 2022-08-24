@@ -3,13 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\ButirKegiatan;
-use App\Models\IIB8;
-use App\Models\InfraType;
-use App\Models\Room;
+use App\Models\IC39;
 use App\Models\Supervisor;
 use Illuminate\Http\Request;
 
-class IIB8Controller extends Controller
+class IC39Controller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,8 +16,8 @@ class IIB8Controller extends Controller
      */
     public function index()
     {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.8'])->first();
-        return view('iib8/index-iib8', ['butirkeg' => $butirkegiatan]);
+        $butirkegiatan = ButirKegiatan::where(['code' => 'I.C.39'])->first();
+        return view('ic39/index-ic39', ['butirkeg' => $butirkegiatan]);
     }
 
     /**
@@ -29,16 +27,12 @@ class IIB8Controller extends Controller
      */
     public function create()
     {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.8'])->first();
-        $rooms = Room::all();
-        $infratypes = InfraType::all();
+        $butirkegiatan = ButirKegiatan::where(['code' => 'I.C.39'])->first();
         $supervisors = Supervisor::all();
         $preferredsp = Supervisor::where(['is_preference' => true])->first()->id;
 
-        return view('iib8/create-iib8', [
+        return view('ic39/create-ic39', [
             'butirkeg' => $butirkegiatan,
-            'infratypes' => $infratypes,
-            'rooms' => $rooms,
             'supervisors' => $supervisors,
             'preferredsp' => $preferredsp,
         ]);
@@ -102,8 +96,8 @@ class IIB8Controller extends Controller
 
     public function getData(Request $request)
     {
-        $recordsTotal = IIB8::count();
-        $recordsFiltered = IIB8::where('title', 'like', '%' . $request->search["value"] . '%')
+        $recordsTotal = IC39::count();
+        $recordsFiltered = IC39::where('title', 'like', '%' . $request->search["value"] . '%')
             ->count();
 
         $orderColumn = 'time';
@@ -120,7 +114,7 @@ class IIB8Controller extends Controller
                 $orderColumn = 'time';
             }
         }
-        $activities = IIB8::where('title', 'like', '%' . $request->search["value"] . '%')
+        $activities = IC39::where('title', 'like', '%' . $request->search["value"] . '%')
             ->orderByRaw($orderColumn . ' ' . $orderDir)
             ->skip($request->start)
             ->take($request->length)
@@ -133,7 +127,7 @@ class IIB8Controller extends Controller
             $activityData["title"] = $activity->title;
             $activityData["time"] =  $activity->time;
             $activityData["documentation"] = $activity->documentation != null ? true : false;
-            $activityData["approval_letter"] = $activity->approval_letter != null ? true : false;
+            $activityData["hour"] = $activity->hour;
             $activityData["id"] = $activity->id;
             $activitiesArray[] = $activityData;
             $i++;

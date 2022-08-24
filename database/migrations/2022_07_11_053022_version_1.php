@@ -106,6 +106,49 @@ class Version1 extends Migration
             $table->string('requester');
             $table->timestamps();
         });
+
+        Schema::create('IIB8', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->foreignId('user_data_id')->constrained('user_data');
+            $table->foreignId('location_id')->constrained('location');
+            $table->foreignId('butir_kegiatan_id')->constrained('butir_kegiatan');
+            $table->foreignId('supervisor_id')->constrained('supervisor');
+            //specific attribute
+            $table->text('title');
+            $table->date('time');
+            $table->foreignId('room_id')->constrained('room');
+            $table->text('background');
+            $table->text('step');
+            $table->text('result');
+            $table->text('summary');
+            $table->text('documentation')->nullable();
+            $table->text('approval_letter')->nullable();
+            $table->string('requester');
+            $table->timestamps();
+        });
+
+        Schema::create('IIB8_infra', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->foreignId('IIB8_id')->constrained('IIB8');
+            $table->foreignId('infra_type_id')->constrained('infra_type');
+            $table->string('infra_name');
+        });
+
+        Schema::create('IC39', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->foreignId('user_data_id')->constrained('user_data');
+            $table->foreignId('location_id')->constrained('location');
+            $table->foreignId('butir_kegiatan_id')->constrained('butir_kegiatan');
+            $table->foreignId('supervisor_id')->constrained('supervisor');
+            //specific attribute
+            $table->text('title');
+            $table->date('time');
+            $table->string('dataset');
+            $table->text('storage');
+            $table->text('filename');
+            $table->text('documentation')->nullable();
+            $table->timestamps();
+        });
     }
 
     /**

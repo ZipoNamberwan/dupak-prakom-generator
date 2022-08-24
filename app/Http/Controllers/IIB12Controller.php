@@ -23,7 +23,7 @@ class IIB12Controller extends Controller
     public function index()
     {
         $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
-        return view('iib12/index-iib12', ['butirkeg' => $butirkegiatan, 'infratypes' => InfraType::all()]);
+        return view('iib12/index-iib12', ['butirkeg' => $butirkegiatan]);
     }
 
     /**

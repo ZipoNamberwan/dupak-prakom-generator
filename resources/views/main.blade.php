@@ -62,11 +62,34 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @if(str_contains(url()->current(), url('/II'))) active @endif" href="#navbar-components" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-components">
+                            <a class="nav-link @if(str_contains(url()->current(), url('/I'))) active @endif" href="#navbar-componentsI" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-componentsI">
+                                <i class="ni ni-ui-04 text-info"></i>
+                                <span class="nav-link-text">I. Tata Kelola dan tata Laksana Teknologi Informasi</span>
+                            </a>
+                            <div class="collapse @if(str_contains(url()->current(), url('/I'))) show @endif" id="navbar-componentsI">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="#IC39" class="nav-link @if(str_contains(url()->current(), url('/IC39'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IC39">I.C.39 Melakukan Backup Atau Pemulihan Data</a>
+                                        <div class="collapse @if(str_contains(url()->current(), url('/IC39'))) show @endif" id="IC39">
+                                            <ul class="nav nav-sm flex-column">
+                                                <li class="nav-item">
+                                                    <a href="/IC39" class="nav-link @if(url()->current() == url('/').'/IC39') active @endif">Daftar Kegiatan</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/IC39/show-generate-by-periode" class="nav-link @if(url()->current() == url('/').'/IC39/show-generate-by-periode') active @endif">Generate Bukti Fisik</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @if(str_contains(url()->current(), url('/II'))) active @endif" href="#navbar-componentsII" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-componentsII">
                                 <i class="ni ni-ui-04 text-info"></i>
                                 <span class="nav-link-text">II. Infrastruktur Teknologi Informasi</span>
                             </a>
-                            <div class="collapse @if(str_contains(url()->current(), url('/II'))) show @endif" id="navbar-components">
+                            <div class="collapse @if(str_contains(url()->current(), url('/II'))) show @endif" id="navbar-componentsII">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
                                         <a href="#IIB8" class="nav-link @if(str_contains(url()->current(), url('/IIB8'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IIB8">II.B.8 Pemeliharaan Infrastruktur TI</a>
