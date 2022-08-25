@@ -47,7 +47,7 @@
                     </div>
                     <!-- Card body -->
                     <div class="card-body">
-                        <form autocomplete="off" method="post" action="/IIB8" class="needs-validation" enctype="multipart/form-data" novalidate>
+                        <form id="formupdate" autocomplete="off" method="post" action="/IIB8" class="needs-validation" enctype="multipart/form-data" novalidate>
                             @csrf
                             <div class="row">
                                 <div class="col-md-12 mb-3">
@@ -66,6 +66,19 @@
                                     </div>
                                     @enderror
                                 </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-control-label" for="maintenance_name">Jenis Pemeliharaan</label>
+                                            <input type="text" class="form-control @error('maintenance_name') is-invalid @enderror" value="{{@old('maintenance_name')}}" id="maintenance_name" name="maintenance_name" onchange="refreshAutoTitle()">
+                                            @error('maintenance_name')
+                                            <div class="invalid-feedback">
+                                                {{$message}}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group mb-0">
                                         <label class="form-control-label" for="exampleDatepicker">Tanggal</label>
@@ -79,7 +92,7 @@
                                 </div>
                                 <div class="col-md-3 mb-3">
                                     <label class="form-control-label">Lokasi</label>
-                                    <select id="room" name="room" class="form-control" data-toggle="select">
+                                    <select id="room" name="room" class="form-control" data-toggle="select" onchange="refreshAutoTitle()">
                                         <option value="0" disabled selected>Pilih Ruangan</option>
                                         @foreach ($rooms as $room)
                                         <option value="{{ $room->id }}" {{ old('room') == $room->id ? 'selected' : '' }}>
@@ -97,9 +110,9 @@
                                     <h4 class="mt-3">Pemeliharaan Infrastruktur TI</h4>
                                     <div class="row">
                                         <div class="col-md-8 mb-3">
-                                            <div id="selection-container">
+                                            <div id="selection-container" class="container">
                                                 <div class="table-responsive py-2 scrollable">
-                                                    <table class="table" width="90%" id="infra-table">
+                                                    <table class="table" width="100%" id="infra-table">
                                                         <thead class="thead-light">
                                                             <tr>
                                                                 <th width="10%">No</th>
@@ -111,10 +124,11 @@
                                                             <tr>
                                                                 <td>1</td>
                                                                 <td class="px-1">
+                                                                    <input type="hidden" name="infraid[]" @if (old('infraid.0')) value="{{ old('infraid.0') }}" @endif>
                                                                     <select id="infratypefirst" name="infratype[]" class="form-control" data-toggle="select">
-                                                                        <option value="0" disabled selected>Pilih Jenis Infrastruktur</option>
+                                                                        <!-- <option value="0" disabled selected>Pilih Jenis Infrastruktur</option> -->
                                                                         @foreach ($infratypes as $infratype)
-                                                                        <option value="{{ $infratype->id }}" {{ old('infratype') == $infratype->id ? 'selected' : '' }}>
+                                                                        <option value="{{ $infratype->id }}" @if (old('infratype.0')) {{$infratype->id == old('infratype.0') ? 'selected' : ''}} @endif>
                                                                             {{ $infratype->name }}
                                                                         </option>
                                                                         @endforeach
@@ -134,14 +148,43 @@
                                                                     @enderror
                                                                 </td>
                                                             </tr>
-                                                            <tr>
-                                                                <td colspan="3">
-                                                                    <button onclick="addinfra('main', '', '', '')" type="button" class="btn btn-secondary btn-sm">
-                                                                        <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                                                                        <span class="btn-inner--text">Tambah Infrastruktur</span>
-                                                                    </button>
+                                                            @if (old('infraname'))
+                                                            @for ($i = 1; $i < count(old('infraname')); $i++) <tr>
+                                                                <td>{{$i + 1}}</td>
+                                                                <td class="px-1">
+                                                                    <input type="hidden" name="infraid[]" value="{{ old('infraid.'.$i) }}">
+                                                                    <select id="{{$i}}" name="infratype[]" class="form-control" data-toggle="select">
+                                                                        <!-- <option value="0" disabled selected>Pilih Jenis Infrastruktur</option> -->
+                                                                        @foreach ($infratypes as $infratype)
+                                                                        <option value="{{ $infratype->id }}" {{$infratype->id == old('infratype.'.$i) ? 'selected' : ''}}>
+                                                                            {{ $infratype->name }}
+                                                                        </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                    @error('infratype.'.$i)
+                                                                    <div class="error-feedback">
+                                                                        {{ $message }}
+                                                                    </div>
+                                                                    @enderror
                                                                 </td>
-                                                            </tr>
+                                                                <td class="px-1 pr-5"><input class="form-control d-inline mr-2" type="text" name="infraname[]" value="{{ old('infraname.'.$i) }}"><button id="btnName{{ $i }}" onclick="removeinfra('btnName{{ $i }}')" class="btn btn-icon btn-sm btn-outline-danger d-inline" type="button"><span class="btn-inner--icon"><i class="fas fa-trash-alt"></i></span></button>
+                                                                    @error('infraname.'.$i)
+                                                                    <div class="error-feedback">
+                                                                        kosong
+                                                                    </div>
+                                                                    @enderror
+                                                                </td>
+                                                                </tr>
+                                                                @endfor
+                                                                @endif
+                                                                <tr>
+                                                                    <td colspan="3">
+                                                                        <button onclick="addinfra('', '')" type="button" class="btn btn-secondary btn-sm">
+                                                                            <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
+                                                                            <span class="btn-inner--text">Tambah Infrastruktur</span>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -181,8 +224,7 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="requester">Pemohon Pemeliharaan Infrastruktur</label>
-                                            <input type="text" class="form-control @error('requester') is-invalid @enderror" value="{{@old('requester')}}" id="requester" name="requester">
+                                            <label class="form-control-label" for="requester">Pemohon Pemeliharaan Infrastruktur</label><input type="text" class="form-control @error('requester') is-invalid @enderror" value="{{@old('requester')}}" id="requester" name="requester">
                                             @error('requester')
                                             <div class="invalid-feedback">
                                                 {{$message}}
@@ -274,7 +316,11 @@
             if (room.selectedIndex != 0)
                 roomString = 'di ruang ' + room.options[room.selectedIndex].text;
 
-            var autoTitleString = 'Melakukan Pemeliharaan ' + roomString
+            var maintenanceString = ''
+            var maintenance = document.getElementById('maintenance_name')
+            maintenanceString = maintenance.value + ' '
+
+            var autoTitleString = 'Melakukan Pemeliharaan ' + maintenanceString + roomString
             var title = document.getElementById('title')
             title.value = autoTitleString ?? ''
         }
@@ -298,7 +344,7 @@
 
 
 <script>
-    var infracount = 1;
+    var infracount = @if(old('infraname')) {{count(old('infraname'))}} @else 1 @endif;
 
     function addinfra(infratypeid, infraname) {
         var infratable = document.getElementById('infra-table');
@@ -312,17 +358,13 @@
 
         cell2.className = 'px-1';
         cell3.className = 'pl-1 pr-5';
+        var buttonid = Date.now();
 
         cell1.innerHTML = infracount;
-        cell2.innerHTML = "<select name=\"infratype[]\" class=\"form-control\" data-toggle=\"select\"><option value=\"0\" disabled selected>Pilih Jenis Infrastruktur</option>@foreach ($infratypes as $infratype)<option value=\"{{ $infratype->id }}\" {{ old('infratype') == $infratype->id ? 'selected' : '' }}>{{ $infratype->name }}</option>@endforeach</select><input type='hidden' value='main' name='activitytype[]'><input type='hidden' name='activityid[]'>";
+        cell2.innerHTML = "<input type='hidden' name='infraid[]'><select id=\"" + buttonid + "\" name=\"infratype[]\" class=\"form-control\" data-toggle=\"select\">@foreach ($infratypes as $infratype)<option value=\"{{ $infratype->id }}\" {{ old('infratype') == $infratype->id ? 'selected' : '' }}>{{ $infratype->name }}</option>@endforeach</select>";
 
-        var buttonid = Date.now();
         cell3.innerHTML =
-            "<input class='form-control d-inline mr-2' type='text' name='activitynote[]'>" +
-            "<button id=\"btnName" + buttonid + "\" onclick=\"removeinfra('btnName" + buttonid +
-            "')\" class=\"btn btn-icon btn-sm btn-outline-danger d-inline\" type=\"button\"><span class=\"btn-inner--icon\"><i class=\"fas fa-trash-alt\"i></span></button>";
-
-        //console.log("main=" + infracount + ", add=" + additionalactivitycount);
+            "<input class='form-control d-inline mr-2' type='text' name='infraname[]'><button id=\"btnName" + buttonid + "\" onclick=\"removeinfra('btnName" + buttonid + "')\" class=\"btn btn-icon btn-sm btn-outline-danger d-inline\" type=\"button\"><span class=\"btn-inner--icon\"><i class=\"fas fa-trash-alt\"></i></span></button>";
     }
 
     function removeinfra(btnName) {
@@ -330,39 +372,38 @@
         var id;
         var table = document.getElementById('infra-table');
         var rowCount = table.rows.length;
-        for (var i = 1; i < rowCount; i++) {
+
+        for (var i = 1; i < rowCount - 1; i++) {
             var row = table.rows[i];
-            console.log(row)
             if (row.cells[2]) {
                 var rowObj = row.cells[2].childNodes[1];
-                var rowId = row.cells[1].childNodes[2];
+                var rowId = row.cells[1].childNodes[0];
                 if (rowObj) {
                     if (rowObj.id == btnName) {
                         table.deleteRow(i);
-                        // id = rowId.value;
-                        // if (id) {
-                        //     appendremovedactivity(id);
-                        // }
-                        // rowCount--;
+                        id = rowId.value;
+                        if (id) {
+                            appendremovedactivity(id);
+                        }
+                        rowCount--;
                     }
                 }
             }
         }
         reindex();
-        //console.log("main=" + infracount + ", add=" + additionalactivitycount);
     }
 
     function reindex() {
         var table = document.getElementById('infra-table');
         var startmain = 1;
-        for (var i = 1; i < table.rows.length; i++) {
+        for (var i = 1; i < table.rows.length - 1; i++) {
             var row = table.rows[i];
-            console.log(row.cells[0].innerHTML)
             row.cells[0].innerHTML = startmain++;
         }
     }
 
     function appendremovedactivity(id) {
+        console.log(id)
         var form = document.getElementById('formupdate');
         var hidden = document.createElement("input");
         hidden.setAttribute("type", "hidden");

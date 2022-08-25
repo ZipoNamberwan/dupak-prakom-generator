@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\ButirKegiatan;
 use App\Models\IIB8;
+use App\Models\IIB8InfraType;
 use App\Models\InfraType;
 use App\Models\Room;
 use App\Models\Supervisor;
@@ -52,7 +53,58 @@ class IIB8Controller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'date' => 'required',
+            'room' => 'required',
+            'requester' => 'required',
+            'result' => 'required',
+            'step' => 'required',
+            'summary' => 'required',
+            'supervisor' => 'required',
+            'infraname.*' => 'required',
+            'infratype.*' => 'required',
+        ]);
+
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.8'])->first();
+
+        $docPath = null;
+        if ($request->hasFile('documentation')) {
+            $docPath = $request->file('documentation')->store('images', 'public');
+        }
+
+        $approvalLetterPath = null;
+        if ($request->hasFile('approval_letter')) {
+            $approvalLetterPath = $request->file('approval_letter')->store('images', 'public');
+        }
+
+        $iib8 = IIB8::create([
+            'title' => $request->title,
+            'time' => $request->date,
+            'room_id' => $request->room,
+            'result' => $request->result,
+            'step' => $request->step,
+            'summary' => $request->summary,
+            'documentation' => $request->documentation,
+            'approval_letter' => $request->approval_letter,
+            'user_data_id' => 1,
+            'location_id' => 1,
+            'butir_kegiatan_id' => $butirkegiatan->id,
+            'requester' => $request->requester,
+            'documentation' => $docPath,
+            'approval_letter' => $approvalLetterPath,
+            'supervisor_id' => $request->supervisor,
+        ]);
+
+        for ($i = 0; $i < count($request->infraname); $i++) {
+            IIB8InfraType::create([
+                'IIB8_id' => $iib8->id,
+                'infra_type_id' => $request->infratype[$i],
+                'infra_name' => $request->infraname[$i],
+            ]);
+        }
+
+        return redirect('/IIB8')->with('success-create', 'Butir Kegiatan II.B.8 telah ditambah!');
     }
 
     /**

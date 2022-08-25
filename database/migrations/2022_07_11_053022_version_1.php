@@ -117,7 +117,6 @@ class Version1 extends Migration
             $table->text('title');
             $table->date('time');
             $table->foreignId('room_id')->constrained('room');
-            $table->text('background');
             $table->text('step');
             $table->text('result');
             $table->text('summary');
@@ -132,6 +131,7 @@ class Version1 extends Migration
             $table->foreignId('IIB8_id')->constrained('IIB8');
             $table->foreignId('infra_type_id')->constrained('infra_type');
             $table->string('infra_name');
+            $table->timestamps();
         });
 
         Schema::create('IC39', function (Blueprint $table) {
