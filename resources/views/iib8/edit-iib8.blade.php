@@ -322,12 +322,7 @@
 
 
 <script>
-    var infracount = @if(old('infraname', $iib8)) {
-        {
-            count(old('infraname', $iib8 - > infras))
-        }
-    }
-    @else 1 @endif;
+    var infracount = @if(old('infraname', $iib8)) {{count(old('infraname', $iib8->infras))}}@else 1 @endif;
 
     function addinfra(infratypeid, infraname) {
         var infratable = document.getElementById('infra-table');

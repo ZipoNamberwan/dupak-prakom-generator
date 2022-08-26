@@ -63,7 +63,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link @if(str_contains(url()->current(), url('/I'))) active @endif" href="#navbar-componentsI" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-componentsI">
-                                <i class="ni ni-ui-04 text-info"></i>
+                                <i class="fas fa-star text-danger"></i>
                                 <span class="nav-link-text">I. Tata Kelola dan tata Laksana Teknologi Informasi</span>
                             </a>
                             <div class="collapse @if(str_contains(url()->current(), url('/I'))) show @endif" id="navbar-componentsI">

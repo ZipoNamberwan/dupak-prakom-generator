@@ -72,15 +72,16 @@
                                         <div class="col">
                                             <div class="form-group">
                                                 <label class="form-control-label">Tanggal Mulai</label>
-                                                <input onchange="countNumberBackup()" class="form-control" placeholder="Start date" type="text" id="start-date">
+                                                <input class="form-control" placeholder="Start date" type="text" id="start-date">
                                             </div>
                                         </div>
                                         <div class="col">
                                             <div class="form-group">
                                                 <label class="form-control-label">Tanggal Berakhir</label>
-                                                <input onchange="countNumberBackup()" class="form-control" placeholder="End date" type="text" id="end-date">
+                                                <input class="form-control" placeholder="End date" type="text" id="end-date">
                                             </div>
                                         </div>
+                                        <button onclick="generateField()" class="btn btn-primary" type="button">Generate</button>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -111,7 +112,7 @@
                                     <div class="row">
                                         <div class="col-md-3 mb-3">
                                             <label class="form-control-label" for="prefix">Prefix</label>
-                                            <input type="text" class="form-control @error('prefix') is-invalid @enderror" value="{{@old('prefix')}}" id="prefix" name="prefix" onchange="countNumberBackup()">
+                                            <input type="text" class="form-control @error('prefix') is-invalid @enderror" value="{{@old('prefix')}}" id="prefix" name="prefix">
                                             @error('prefix')
                                             <div class="invalid-feedback">
                                                 {{$message}}
@@ -120,7 +121,7 @@
                                         </div>
                                         <div class="col-md-3 mb-3">
                                             <label class="form-control-label" for="suffix">Suffix</label>
-                                            <input type="text" class="form-control @error('suffix') is-invalid @enderror" value="{{@old('suffix')}}" id="suffix" name="suffix" onchange="countNumberBackup()">
+                                            <input type="text" class="form-control @error('suffix') is-invalid @enderror" value="{{@old('suffix')}}" id="suffix" name="suffix">
                                             @error('suffix')
                                             <div class="invalid-feedback">
                                                 {{$message}}
@@ -129,19 +130,26 @@
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-8 mb-3">
+                                        <div class="col-md-9 mb-3">
                                             <div class="table-responsive py-4">
                                                 <table class="table" id="datatable-id" width="100%">
                                                     <thead class="thead-light">
                                                         <tr>
-                                                            <th>#</th>
-                                                            <th>Tanggal Backup</th>
-                                                            <th>Nama File</th>
-                                                            <th>Jam Backup</th>
+                                                            <th class="col-1">#</th>
+                                                            <th class="col-3">Tanggal Backup</th>
+                                                            <th class="col-3">Nama File</th>
+                                                            <th class="col-3">Jam Backup</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-
+                                                        <tr>
+                                                            <td colspan="3">
+                                                                <button onclick="addbackup('', '')" type="button" class="btn btn-secondary btn-sm">
+                                                                    <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
+                                                                    <span class="btn-inner--text">Tambah Backup</span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -194,6 +202,8 @@
 <script src="/assets/vendor/momentjs/moment-with-locales.js"></script>
 
 <script>
+    var backupcount = 0;
+
     $('#start-date').datepicker({
         format: 'd M yyyy',
     });
@@ -242,68 +252,151 @@
     }
 
     function getFileName(prefix, suffix, date) {
-        return prefix + date.getDate() + '-' + date.getMonth() + '-' + date.getFullYear() + suffix;
+        return prefix + String(date.getDate()).padStart(2, '0') + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getFullYear() + suffix;
     }
 
     function getStringDate(date) {
-        const month = ["Januari", "Februari", "Naret", "April", "Mei", "Juni",
-            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-        ];
-        return date.getDate() + ' ' + month[date.getMonth()] + ' ' + date.getFullYear();
+        return date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
     }
 
-    function countNumberBackup() {
+    function makeButtonId(length) {
+        var result = '';
+        var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var charactersLength = characters.length;
+        for (var i = 0; i < length; i++) {
+            result += characters.charAt(Math.floor(Math.random() *
+                charactersLength));
+        }
+        return result;
+    }
+
+    function addbackup(date, time) {
+        var backuptable = document.getElementById('datatable-id');
+
+        backupcount++;
+        var row = backuptable.insertRow(backupcount);
+
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+        var cell4 = row.insertCell(3);
+
+        cell1.className = 'px-3 align-middle';
+        cell2.className = 'px-3';
+        cell3.className = 'px-3 align-middle';
+        cell4.className = 'pl-1 pr-5 nowrap';
+        var buttonid = makeButtonId(10);
+
+        cell1.innerHTML = backupcount;
+        var dateVal = date != '' ? 'value = "' + getStringDate(date) + '"' : ''
+        cell2.innerHTML = '<input name="date" class="form-control" placeholder="Select date" type="date" ' + dateVal + '>'
+
+        var prefix = document.getElementById('prefix').value
+        var suffix = document.getElementById('suffix').value
+        if ((prefix != '' || suffix != '') && date != '') {
+            cell3.innerHTML = getFileName(prefix, suffix, date)
+        }
+
+        cell4.innerHTML = "<input type=\"time\" class=\"form-control d-inline mr-2\" id=\"hour\" name=\"hour\" onchange=\"countNumberBackup()\"><button id=\"btnName" + buttonid + "\" onclick=\"removebackup('btnName" + buttonid + "')\" class=\"btn btn-icon btn-sm btn-outline-danger d-inline\" type=\"button\"><span class=\"btn-inner--icon\"><i class=\"fas fa-trash-alt\"></i></span></button>"
+    }
+
+    function generateField() {
         if (document.getElementById('start-date').value != null && document.getElementById('end-date').value != null) {
             var startdate = Date.parse(document.getElementById('start-date').value)
             var enddate = Date.parse(document.getElementById('end-date').value)
             startdate = new Date(startdate)
             enddate = new Date(enddate)
 
-            var dates = [];
             for (var d = startdate; d <= enddate; d.setDate(d.getDate() + 7)) {
-                dates.push(new Date(d));
+                addbackup(d, '')
             }
-
-            if (dates.length > 0) {
-                document.getElementById('datatable-id').style.display = 'block'
-            } else {
-                document.getElementById('datatable-id').style.display = 'none'
-            }
-
-            // var table = document.getElementById('datatable-id')
-
-            var body = document.getElementById('datatable-id').getElementsByTagName('tbody')[0]
-            body.innerHTML = ''
-
-            for (var i = 0; i < dates.length; i++) {
-                var row = body.insertRow();
-
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-                var cell4 = row.insertCell(3);
-
-                cell1.className = 'px-1';
-                cell2.className = 'px-1';
-                cell3.className = 'px-1';
-                cell4.className = 'px-1';
-
-                cell1.innerHTML = i + 1;
-
-                cell2.innerHTML = getStringDate(dates[i])
-
-                var prefix = document.getElementById('prefix').value
-                var suffix = document.getElementById('suffix').value
-                if (prefix != '' || suffix != '') {
-                    cell3.innerHTML = getFileName(prefix, suffix, dates[i])
-                }
-                cell4.innerHTML = "<input type=\"time\" class=\"form-control\" value=\"{{@old('hour')}}\" id=\"hour\" name=\"hour\" onchange=\"countNumberBackup()\">"
-
-            }
-
-            // dates.forEach(myFunction);
         }
     }
+
+    function removebackup(btnName) {
+        backupcount--;
+        var id;
+        var table = document.getElementById('datatable-id');
+        var rowCount = table.rows.length;
+
+        for (var i = 1; i < rowCount - 1; i++) {
+            var row = table.rows[i];
+            if (row.cells[2]) {
+                var rowObj = row.cells[3].childNodes[1];
+                var rowId = row.cells[1].childNodes[0];
+                if (rowObj) {
+                    if (rowObj.id == btnName) {
+                        table.deleteRow(i);
+                        id = rowId.value;
+                        rowCount--;
+                    }
+                }
+            }
+        }
+        reindex();
+    }
+
+    function reindex() {
+        var table = document.getElementById('datatable-id');
+        var startmain = 1;
+        for (var i = 1; i < table.rows.length - 1; i++) {
+            var row = table.rows[i];
+            row.cells[0].innerHTML = startmain++;
+        }
+    }
+
+    // function countNumberBackup() {
+    //     if (document.getElementById('start-date').value != null && document.getElementById('end-date').value != null) {
+    //         var startdate = Date.parse(document.getElementById('start-date').value)
+    //         var enddate = Date.parse(document.getElementById('end-date').value)
+    //         startdate = new Date(startdate)
+    //         enddate = new Date(enddate)
+
+    //         var dates = [];
+    //         for (var d = startdate; d <= enddate; d.setDate(d.getDate() + 7)) {
+    //             dates.push(new Date(d));
+    //         }
+
+    //         if (dates.length > 0) {
+    //             document.getElementById('datatable-id').style.display = 'block'
+    //         } else {
+    //             document.getElementById('datatable-id').style.display = 'none'
+    //         }
+
+    //         // var table = document.getElementById('datatable-id')
+
+    //         var body = document.getElementById('datatable-id').getElementsByTagName('tbody')[0]
+    //         body.innerHTML = ''
+
+    //         for (var i = 0; i < dates.length; i++) {
+    //             var row = body.insertRow();
+
+    //             var cell1 = row.insertCell(0);
+    //             var cell2 = row.insertCell(1);
+    //             var cell3 = row.insertCell(2);
+    //             var cell4 = row.insertCell(3);
+
+    //             cell1.className = 'px-1';
+    //             cell2.className = 'px-1';
+    //             cell3.className = 'px-1';
+    //             cell4.className = 'px-1';
+
+    //             cell1.innerHTML = i + 1;
+
+    //             cell2.innerHTML = getStringDate(dates[i])
+
+    //             var prefix = document.getElementById('prefix').value
+    //             var suffix = document.getElementById('suffix').value
+    //             if (prefix != '' || suffix != '') {
+    //                 cell3.innerHTML = getFileName(prefix, suffix, dates[i])
+    //             }
+    //             cell4.innerHTML = "<input type=\"time\" class=\"form-control\" value=\"{{@old('hour')}}\" id=\"hour\" name=\"hour\" onchange=\"countNumberBackup()\">"
+
+    //         }
+
+    //         // dates.forEach(myFunction);
+    //     }
+    // }
 </script>
 
 <script>

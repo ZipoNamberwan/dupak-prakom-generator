@@ -356,12 +356,7 @@
 
 
 <script>
-    var infracount = @if(old('infraname')) {
-        {
-            count(old('infraname'))
-        }
-    }
-    @else 1 @endif;
+    var infracount = @if(old('infraname')) {{count(old('infraname'))}} @else 1 @endif;
 
     function addinfra(infratypeid, infraname) {
         var infratable = document.getElementById('infra-table');
