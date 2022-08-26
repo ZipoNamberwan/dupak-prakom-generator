@@ -141,7 +141,7 @@
                                             <label class="form-control-label" for="background">Latar Belakang dan Tujuan Pemasangan</label>
                                             <textarea class="form-control" id="background" name="background" rows="5">{{@old('background')}}</textarea>
                                             @error('background')
-                                            <div class="invalid-feedback">
+                                            <div class="error-feedback">
                                                 {{$message}}
                                             </div>
                                             @enderror
@@ -150,7 +150,7 @@
                                             <label class="form-control-label" for="step">Tahapan</label>
                                             <textarea class="form-control" id="step" name="step" rows="5">{{@old('step')}}</textarea>
                                             @error('step')
-                                            <div class="invalid-feedback">
+                                            <div class="error-feedback">
                                                 {{$message}}
                                             </div>
                                             @enderror
@@ -159,7 +159,7 @@
                                             <label class="form-control-label" for="summary">Kesimpulan</label>
                                             <textarea class="form-control" id="summary" name="summary" rows="5">{{@old('summary')}}</textarea>
                                             @error('summary')
-                                            <div class="invalid-feedback">
+                                            <div class="error-feedback">
                                                 {{$message}}
                                             </div>
                                             @enderror

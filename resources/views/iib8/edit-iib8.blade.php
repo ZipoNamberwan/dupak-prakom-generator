@@ -43,35 +43,27 @@
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header">
-                        <h3 class="mb-0">Tambah Butir Kegiatan {{$butirkeg->code}} {{$butirkeg->name}}</h3>
+                        <h3 class="mb-0">Ubah Butir Kegiatan {{$butirkeg->code}} {{$butirkeg->name}}</h3>
                     </div>
                     <!-- Card body -->
                     <div class="card-body">
-                        <form autocomplete="off" method="post" action="/IIB9/{{$iib9->id}}" class="needs-validation" enctype="multipart/form-data" novalidate>
+                        <form id="formupdate" autocomplete="off" method="post" action="/IIB8/{{$iib8->id}}" class="needs-validation" enctype="multipart/form-data" novalidate>
                             @method('PUT')
                             @csrf
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label class="form-control-label" for="title">Judul</label>
-                                    <div class="mb-3 d-flex align-items-center">
-                                        <label class="mr-3 custom-toggle">
-                                            <input type="checkbox" checked name="automatic_title" id="automatic_title" onchange=changeAutomaticTitle()>
-                                            <span class="custom-toggle-slider rounded-circle" data-label-off="Tidak" data-label-on="Ya"></span>
-                                        </label>
-                                        <span>Judul Otomatis</span>
-                                    </div>
-                                    <input readonly type="text" class="form-control @error('title') is-invalid @enderror" value="{{@old('title', $iib9->title)}}" id="title" name="title">
+                                    <input type="text" class="form-control @error('title') is-invalid @enderror" value="{{@old('title', $iib8->title)}}" id="title" name="title">
                                     @error('title')
                                     <div class="invalid-feedback">
                                         {{$message}}
                                     </div>
                                     @enderror
                                 </div>
-
                                 <div class="col-md-6 mb-3">
                                     <div class="form-group mb-0">
                                         <label class="form-control-label" for="exampleDatepicker">Tanggal</label>
-                                        <input name="date" class="form-control @error('date') is-invalid @enderror" placeholder="Select date" type="date" value="{{ @old('date',$iib9->time) }}">
+                                        <input name="date" class="form-control @error('date') is-invalid @enderror" placeholder="Select date" type="date" value="{{ @old('date', $iib8->time) }}">
                                         @error('date')
                                         <div class="invalid-feedback">
                                             {{ $message }}
@@ -79,13 +71,12 @@
                                         @enderror
                                     </div>
                                 </div>
-
                                 <div class="col-md-3 mb-3">
                                     <label class="form-control-label">Lokasi</label>
-                                    <select id="room" name="room" class="form-control" data-toggle="select" onchange="refreshAutoTitle()">
+                                    <select id="room" name="room" class="form-control" data-toggle="select">
                                         <option value="0" disabled selected>Pilih Ruangan</option>
                                         @foreach ($rooms as $room)
-                                        <option value="{{ $room->id }}" {{ old('room',$iib9->roomDetail->id) == $room->id ? 'selected' : '' }}>
+                                        <option value="{{ $room->id }}" {{ old('room', $iib8->roomDetail->id) == $room->id ? 'selected' : '' }}>
                                             {{ $room->name }}
                                         </option>
                                         @endforeach
@@ -97,37 +88,11 @@
                                     @enderror
                                 </div>
                                 <div class="col-12">
-                                    <h4 class="mt-3">Informasi Infrastruktur</h4>
                                     <div class="row">
-                                        <div class="col-md-3 mb-3">
-                                            <label class="form-control-label">Jenis Infrastruktur</label>
-                                            <select id="infratype" name="infratype" class="form-control" data-toggle="select" onchange="refreshAutoTitle()">
-                                                <option value="0" disabled selected>Pilih Jenis Infrastruktur</option>
-                                                @foreach ($infratypes as $infratype)
-                                                <option value="{{ $infratype->id }}" {{ old('infratype', $iib9->infraTypeDetail->id) == $infratype->id ? 'selected' : '' }}>
-                                                    {{ $infratype->name }}
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                            @error('infratype')
-                                            <div class="error-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3 mb-3">
-                                            <label class="form-control-label" for="infraname">Nama Infrastruktur</label>
-                                            <input onchange="refreshAutoTitle()" type="text" class="form-control @error('infraname') is-invalid @enderror" value="{{@old('infraname', $iib9->infra_name)}}" id="infraname" name="infraname">
-                                            @error('infraname')
-                                            <div class="invalid-feedback">
-                                                {{$message}}
-                                            </div>
-                                            @enderror
-                                        </div>
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="infrafunc">Fungsi Infrastruktur</label>
-                                            <input type="text" class="form-control @error('infrafunc') is-invalid @enderror" value="{{@old('infrafunc', $iib9->infra_func)}}" id="infrafunc" name="infrafunc">
-                                            @error('infrafunc')
+                                            <label class="form-control-label" for="maintenance_summary">Ringkasan Singkat Pemeliharaan</label>
+                                            <input type="text" class="form-control @error('maintenance_summary') is-invalid @enderror" value="{{@old('maintenance_summary', $iib8->maintenance_summary)}}" id="maintenance_summary" name="maintenance_summary">
+                                            @error('maintenance_summary')
                                             <div class="invalid-feedback">
                                                 {{$message}}
                                             </div>
@@ -135,32 +100,133 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-12" id="detection_form">
-                                    <h4 class="mt-3">Pemasangan Infrastruktur TI</h4>
+                                <div class="col-12 mt-3" id="detection_form">
+                                    <!-- <h4 class="mt-3">Pemeliharaan Infrastruktur TI</h4> -->
+                                    <label class="form-control-label" for="step">Daftar Infrastruktur</label>
+                                    <div class="row">
+                                        <div class="col-md-9 mb-3">
+                                            <div class="table-responsive py-2 scrollable">
+                                                <table class="table" width="100%" id="infra-table">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th width="10%">No</th>
+                                                            <th>Jenis Infrastruktur</th>
+                                                            <th>Nama Infrastruktur</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td class="px-1">
+                                                                <input type="hidden" name="infraid[]" value="{{ old('infraid.0', $iib8->infras[0]->id) }}">
+                                                                <select id="infratypefirst" name="infratype[]" class="form-control" data-toggle="select">
+                                                                    <!-- <option value="0" disabled selected>Pilih Jenis Infrastruktur</option> -->
+                                                                    @foreach ($infratypes as $infratype)
+                                                                    <option value="{{ $infratype->id }}" {{$infratype->id == old('infratype.0', $iib8->infras[0]->infraTypeDetail->id) ? 'selected' : ''}}>
+                                                                        {{ $infratype->name }}
+                                                                    </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                @error('infratype.0')
+                                                                <div class="error-feedback">
+                                                                    {{ $message }}
+                                                                </div>
+                                                                @enderror
+                                                            </td>
+                                                            <td class="px-1 pr-5">
+                                                                <input class="form-control" type="text" id="infranamefirst" name="infraname[]" value="{{ old('infraname.0', $iib8->infras[0]->infra_name) }}">
+                                                                @error('infraname.0')
+                                                                <div class="error-feedback">
+                                                                    kosong
+                                                                </div>
+                                                                @enderror
+                                                            </td>
+                                                        </tr>
+                                                        @if (old('infraname'))
+                                                        @for ($i = 1; $i < count(old('infraname')); $i++) <tr>
+                                                            <td>{{$i + 1}}</td>
+                                                            <td class="px-1">
+                                                                <input type="hidden" name="infraid[]" value="{{ old('infraid.'.$i) }}">
+                                                                <select id="{{$i}}" name="infratype[]" class="form-control" data-toggle="select">
+                                                                    <!-- <option value="0" disabled selected>Pilih Jenis Infrastruktur</option> -->
+                                                                    @foreach ($infratypes as $infratype)
+                                                                    <option value="{{ $infratype->id }}" {{$infratype->id == old('infratype.'.$i) ? 'selected' : ''}}>
+                                                                        {{ $infratype->name }}
+                                                                    </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                @error('infratype.'.$i)
+                                                                <div class="error-feedback">
+                                                                    {{ $message }}
+                                                                </div>
+                                                                @enderror
+                                                            </td>
+                                                            <td class="px-1 pr-5 nowrap"><input class="form-control d-inline mr-2" type="text" name="infraname[]" value="{{ old('infraname.'.$i) }}"><button id="btnName{{ $i }}" onclick="removeinfra('btnName{{ $i }}')" class="btn btn-icon btn-sm btn-outline-danger d-inline" type="button"><span class="btn-inner--icon"><i class="fas fa-trash-alt"></i></span></button>
+                                                                @error('infraname.'.$i)
+                                                                <div class="error-feedback">
+                                                                    kosong
+                                                                </div>
+                                                                @enderror
+                                                            </td>
+                                                            </tr>
+                                                            @endfor
+                                                            @elseif($iib8 != null)
+                                                            @for ($i = 1; $i < count($iib8->infras); $i++)
+                                                                <tr>
+                                                                    <td>{{$i + 1}}</td>
+                                                                    <td class="px-1">
+                                                                        <input type="hidden" name="infraid[]" value="{{ old('infraid.'.$i, $iib8->infras[$i]->id) }}">
+                                                                        <select id="{{$i}}" name="infratype[]" class="form-control" data-toggle="select">
+                                                                            <!-- <option value="0" disabled selected>Pilih Jenis Infrastruktur</option> -->
+                                                                            @foreach ($infratypes as $infratype)
+                                                                            <option value="{{ $infratype->id }}" {{$infratype->id == $iib8->infras[$i]->infraTypeDetail->id ? 'selected' : ''}}>
+                                                                                {{ $infratype->name }}
+                                                                            </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
+                                                                    <td class="px-1 pr-5 nowrap"><input class="form-control d-inline mr-2" type="text" name="infraname[]" value="{{ $iib8->infras[$i]->infra_name }}"><button id="btnName{{ $i }}" onclick="removeinfra('btnName{{ $i }}')" class="btn btn-icon btn-sm btn-outline-danger d-inline" type="button"><span class="btn-inner--icon"><i class="fas fa-trash-alt"></i></span></button>
+                                                                    </td>
+                                                                </tr>
+                                                                @endfor
+                                                                @endif
+                                                                <tr>
+                                                                    <td colspan="3">
+                                                                        <button onclick="addinfra('', '')" type="button" class="btn btn-secondary btn-sm">
+                                                                            <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
+                                                                            <span class="btn-inner--text">Tambah Infrastruktur</span>
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="background">Latar Belakang dan Tujuan Pemasangan</label>
-                                            <textarea class="form-control" id="background" name="background" rows="5">{{@old('background', $iib9->background)}}</textarea>
-                                            @error('background')
-                                            <div class="invalid-feedback">
-                                                {{$message}}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6 mb-3">
                                             <label class="form-control-label" for="step">Tahapan</label>
-                                            <textarea class="form-control" id="step" name="step" rows="5">{{@old('step', $iib9->step)}}</textarea>
+                                            <textarea class="form-control" id="step" name="step" rows="5">{{@old('step', $iib8->step)}}</textarea>
                                             @error('step')
-                                            <div class="invalid-feedback">
+                                            <div class="error-feedback">
                                                 {{$message}}
                                             </div>
                                             @enderror
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="summary">Kesimpulan</label>
-                                            <textarea class="form-control" id="summary" name="summary" rows="5">{{@old('summary', $iib9->summary)}}</textarea>
+                                            <label class="form-control-label" for="result">Hasil</label>
+                                            <textarea class="form-control" id="result" name="result" rows="5">{{@old('result', $iib8->result)}}</textarea>
+                                            @error('result')
+                                            <div class="error-feedback">
+                                                {{$message}}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-control-label" for="summary">Kesimpulan dan Rekomendasi</label>
+                                            <textarea class="form-control" id="summary" name="summary" rows="5">{{@old('summary', $iib8->summary)}}</textarea>
                                             @error('summary')
-                                            <div class="invalid-feedback">
+                                            <div class="error-feedback">
                                                 {{$message}}
                                             </div>
                                             @enderror
@@ -170,8 +236,7 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="requester">Pemohon/Pemegang Infrastruktur</label>
-                                            <input type="text" class="form-control @error('requester') is-invalid @enderror" value="{{@old('requester', $iib9->requester)}}" id="requester" name="requester">
+                                            <label class="form-control-label" for="requester">Pemohon Pemeliharaan Infrastruktur</label><input type="text" class="form-control @error('requester') is-invalid @enderror" value="{{@old('requester', $iib8->requester)}}" id="requester" name="requester">
                                             @error('requester')
                                             <div class="invalid-feedback">
                                                 {{$message}}
@@ -182,7 +247,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-control-label" for="documentation">Dokumentasi</label>
-                                    <img class="img-preview-documentation img-fluid mb-3 col-sm-5 image-preview" style="display:block" src="@if($iib9->documentation != null) {{asset('storage/' . $iib9->documentation)}} @endif">
+                                    <img class="img-preview-documentation img-fluid mb-3 col-sm-5 image-preview" style="display:block" src="@if($iib8->documentation != null) {{asset('storage/' . $iib8->documentation)}} @endif">
                                     <div class="custom-file">
                                         <input name="documentation" type="file" class="custom-file-input" id="documentation" lang="en" accept="image/*" onchange="previewDocumentation()">
                                         <label class="custom-file-label" for="customFileLang" id="documentationLabel">Select file</label>
@@ -190,7 +255,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-control-label" for="approval_letter">Surat Persetujuan</label>
-                                    <img class="img-preview-approval-letter img-fluid mb-3 col-sm-5 image-preview" style="display:block" src="@if($iib9->approval_letter != null) {{asset('storage/' . $iib9->approval_letter)}} @endif">
+                                    <img class="img-preview-approval-letter img-fluid mb-3 col-sm-5 image-preview" style="display:block" src="@if($iib8->approval_letter != null) {{asset('storage/' . $iib8->approval_letter)}} @endif">
                                     <div class="custom-file">
                                         <input name="approval_letter" type="file" class="custom-file-input" id="approval_letter" lang="en" accept="image/*" onchange="previewApprovalLetter()">
                                         <label class="custom-file-label" for="customFileLang" id="approvalLetterLabel">Select file</label>
@@ -201,7 +266,7 @@
                                     <select id="supervisor" name="supervisor" class="form-control" data-toggle="select">
                                         <!-- <option value="0" disabled selected>Pilih Pejabat Penanda Tangan</option> -->
                                         @foreach ($supervisors as $supervisor)
-                                        <option value="{{ $supervisor->id }}" {{ old('supervisor', $iib9->supervisorDetail->id) == $supervisor->id ? 'selected' : '' }}>
+                                        <option value="{{ $supervisor->id }}" {{ old('supervisor', $iib8->supervisorDetail->id) == $supervisor->id ? 'selected' : '' }}>
                                             {{ $supervisor->name }}
                                         </option>
                                         @endforeach
@@ -253,40 +318,82 @@
             imgPreview.src = OFREvent.target.result;
         }
     }
+</script>
 
-    function refreshAutoTitle() {
-        var title = document.getElementById('title')
-        var auto = document.getElementById('automatic_title')
-        if (auto.checked) {
-            var infraTypeString = ''
-            var infraType = document.getElementById("infratype");
-            if (infraType.selectedIndex != 0)
-                infraTypeString = infraType.options[infraType.selectedIndex].text + ' ';
 
-            var infraNameString = ''
-            var infraName = document.getElementById('infraname')
-            infraNameString = infraName.value + ' '
+<script>
+    var infracount = @if(old('infraname', $iib8)) {
+        {
+            count(old('infraname', $iib8 - > infras))
+        }
+    }
+    @else 1 @endif;
 
-            var roomString = ''
-            var room = document.getElementById('room')
-            if (room.selectedIndex != 0)
-                roomString = 'di ruang ' + room.options[room.selectedIndex].text;
+    function addinfra(infratypeid, infraname) {
+        var infratable = document.getElementById('infra-table');
 
-            var autoTitleString = 'Melakukan Pemasangan ' + infraTypeString + infraNameString + roomString
-            var title = document.getElementById('title')
-            title.value = autoTitleString ?? ''
+        infracount++;
+        var row = infratable.insertRow(infracount);
+
+        var cell1 = row.insertCell(0);
+        var cell2 = row.insertCell(1);
+        var cell3 = row.insertCell(2);
+
+        cell2.className = 'px-1';
+        cell3.className = 'pl-1 pr-5 nowrap';
+        var buttonid = Date.now();
+
+        cell1.innerHTML = infracount;
+        cell2.innerHTML = "<input type='hidden' name='infraid[]'><select id=\"" + buttonid + "\" name=\"infratype[]\" class=\"form-control\" data-toggle=\"select\">@foreach ($infratypes as $infratype)<option value=\"{{ $infratype->id }}\" {{ old('infratype') == $infratype->id ? 'selected' : '' }}>{{ $infratype->name }}</option>@endforeach</select>";
+
+        cell3.innerHTML =
+            "<input class='form-control d-inline mr-2' type='text' name='infraname[]'><button id=\"btnName" + buttonid + "\" onclick=\"removeinfra('btnName" + buttonid + "')\" class=\"btn btn-icon btn-sm btn-outline-danger d-inline\" type=\"button\"><span class=\"btn-inner--icon\"><i class=\"fas fa-trash-alt\"></i></span></button>";
+    }
+
+    function removeinfra(btnName) {
+        infracount--;
+        var id;
+        var table = document.getElementById('infra-table');
+        var rowCount = table.rows.length;
+
+        for (var i = 1; i < rowCount - 1; i++) {
+            var row = table.rows[i];
+            if (row.cells[2]) {
+                var rowObj = row.cells[2].childNodes[1];
+                var rowId = row.cells[1].childNodes[1];
+                if (rowObj) {
+                    if (rowObj.id == btnName) {
+                        table.deleteRow(i);
+                        id = rowId.value;
+                        if (id) {
+                            appendremovedactivity(id);
+                        }
+                        rowCount--;
+                    }
+                }
+            }
+        }
+        reindex();
+    }
+
+    function reindex() {
+        var table = document.getElementById('infra-table');
+        var startmain = 1;
+        for (var i = 1; i < table.rows.length - 1; i++) {
+            var row = table.rows[i];
+            row.cells[0].innerHTML = startmain++;
         }
     }
 
-    function changeAutomaticTitle() {
-        var auto = document.getElementById('automatic_title')
-        var title = document.getElementById('title')
-        if (auto.checked) {
-            title.readOnly = true
-        } else {
-            title.readOnly = false
-        }
-        refreshAutoTitle()
+    function appendremovedactivity(id) {
+        var form = document.getElementById('formupdate');
+        var hidden = document.createElement("input");
+        hidden.setAttribute("type", "hidden");
+        hidden.setAttribute("name", "removedinfra[]");
+        hidden.setAttribute("id", "removedinfra[]");
+        hidden.setAttribute("value", id);
+
+        form.appendChild(hidden);
     }
 </script>
 

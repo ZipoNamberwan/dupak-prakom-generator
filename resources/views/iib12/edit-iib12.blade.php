@@ -43,7 +43,7 @@
                 <div class="card">
                     <!-- Card header -->
                     <div class="card-header">
-                        <h3 class="mb-0">Tambah Butir Kegiatan {{$butirkeg->code}} {{$butirkeg->name}}</h3>
+                        <h3 class="mb-0">Ubah Butir Kegiatan {{$butirkeg->code}} {{$butirkeg->name}}</h3>
                     </div>
                     <!-- Card body -->
                     <div class="card-body">

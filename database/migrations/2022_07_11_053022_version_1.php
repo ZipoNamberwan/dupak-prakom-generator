@@ -122,13 +122,14 @@ class Version1 extends Migration
             $table->text('summary');
             $table->text('documentation')->nullable();
             $table->text('approval_letter')->nullable();
+            $table->text('maintenance_summary');
             $table->string('requester');
             $table->timestamps();
         });
 
         Schema::create('IIB8_infra', function (Blueprint $table) {
             $table->id()->autoincrement();
-            $table->foreignId('IIB8_id')->constrained('IIB8');
+            $table->foreignId('IIB8_id')->constrained('IIB8')->onUpdate('cascade')->onDelete('cascade');
             $table->foreignId('infra_type_id')->constrained('infra_type');
             $table->string('infra_name');
             $table->timestamps();

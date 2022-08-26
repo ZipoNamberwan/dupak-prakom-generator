@@ -106,88 +106,100 @@
                                     </div>
                                     @enderror
                                 </div>
-                                <div class="col-12" id="detection_form">
-                                    <h4 class="mt-3">Pemeliharaan Infrastruktur TI</h4>
+                                <div class="col-12">
                                     <div class="row">
-                                        <div class="col-md-8 mb-3">
-                                            <div id="selection-container" class="container">
-                                                <div class="table-responsive py-2 scrollable">
-                                                    <table class="table" width="100%" id="infra-table">
-                                                        <thead class="thead-light">
-                                                            <tr>
-                                                                <th width="10%">No</th>
-                                                                <th>Jenis Infrastruktur</th>
-                                                                <th>Nama Infrastruktur</th>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-control-label" for="maintenance_summary">Ringkasan Singkat Pemeliharaan</label>
+                                            <input type="text" class="form-control @error('maintenance_summary') is-invalid @enderror" value="{{@old('maintenance_summary')}}" id="maintenance_summary" name="maintenance_summary">
+                                            @error('maintenance_summary')
+                                            <div class="invalid-feedback">
+                                                {{$message}}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-3" id="detection_form">
+                                    <!-- <h4 class="mt-3">Pemeliharaan Infrastruktur TI</h4> -->
+                                    <label class="form-control-label" for="step">Daftar Infrastruktur</label>
+                                    <div class="row">
+                                        <div class="col-md-9 mb-3">
+                                            <div class="table-responsive py-2 scrollable">
+                                                <table class="table" width="100%" id="infra-table">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th width="10%">No</th>
+                                                            <th>Jenis Infrastruktur</th>
+                                                            <th>Nama Infrastruktur</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>1</td>
+                                                            <td class="px-1">
+                                                                <input type="hidden" name="infraid[]" @if (old('infraid.0')) value="{{ old('infraid.0') }}" @endif>
+                                                                <select id="infratypefirst" name="infratype[]" class="form-control" data-toggle="select">
+                                                                    <!-- <option value="0" disabled selected>Pilih Jenis Infrastruktur</option> -->
+                                                                    @foreach ($infratypes as $infratype)
+                                                                    <option value="{{ $infratype->id }}" @if (old('infratype.0')) {{$infratype->id == old('infratype.0') ? 'selected' : ''}} @endif>
+                                                                        {{ $infratype->name }}
+                                                                    </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                @error('infratype.0')
+                                                                <div class="error-feedback">
+                                                                    {{ $message }}
+                                                                </div>
+                                                                @enderror
+                                                            </td>
+                                                            <td class="px-1 pr-5">
+                                                                <input class="form-control" type="text" id="infranamefirst" name="infraname[]" @if (old('infraname.0')) value="{{ old('infraname.0') }}" @endif>
+                                                                @error('infraname.0')
+                                                                <div class="error-feedback">
+                                                                    kosong
+                                                                </div>
+                                                                @enderror
+                                                            </td>
+                                                        </tr>
+                                                        @if (old('infraname'))
+                                                        @for ($i = 1; $i < count(old('infraname')); $i++) <tr>
+                                                            <td>{{$i + 1}}</td>
+                                                            <td class="px-1">
+                                                                <input type="hidden" name="infraid[]" value="{{ old('infraid.'.$i) }}">
+                                                                <select id="{{$i}}" name="infratype[]" class="form-control" data-toggle="select">
+                                                                    <!-- <option value="0" disabled selected>Pilih Jenis Infrastruktur</option> -->
+                                                                    @foreach ($infratypes as $infratype)
+                                                                    <option value="{{ $infratype->id }}" {{$infratype->id == old('infratype.'.$i) ? 'selected' : ''}}>
+                                                                        {{ $infratype->name }}
+                                                                    </option>
+                                                                    @endforeach
+                                                                </select>
+                                                                @error('infratype.'.$i)
+                                                                <div class="error-feedback">
+                                                                    {{ $message }}
+                                                                </div>
+                                                                @enderror
+                                                            </td>
+                                                            <td class="px-1 pr-5 nowrap"><input class="form-control d-inline mr-2" type="text" name="infraname[]" value="{{ old('infraname.'.$i) }}"><button id="btnName{{ $i }}" onclick="removeinfra('btnName{{ $i }}')" class="btn btn-icon btn-sm btn-outline-danger d-inline" type="button"><span class="btn-inner--icon"><i class="fas fa-trash-alt"></i></span></button>
+                                                                @error('infraname.'.$i)
+                                                                <div class="error-feedback">
+                                                                    kosong
+                                                                </div>
+                                                                @enderror
+                                                            </td>
                                                             </tr>
-                                                        </thead>
-                                                        <tbody>
+                                                            @endfor
+                                                            @endif
                                                             <tr>
-                                                                <td>1</td>
-                                                                <td class="px-1">
-                                                                    <input type="hidden" name="infraid[]" @if (old('infraid.0')) value="{{ old('infraid.0') }}" @endif>
-                                                                    <select id="infratypefirst" name="infratype[]" class="form-control" data-toggle="select">
-                                                                        <!-- <option value="0" disabled selected>Pilih Jenis Infrastruktur</option> -->
-                                                                        @foreach ($infratypes as $infratype)
-                                                                        <option value="{{ $infratype->id }}" @if (old('infratype.0')) {{$infratype->id == old('infratype.0') ? 'selected' : ''}} @endif>
-                                                                            {{ $infratype->name }}
-                                                                        </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                    @error('infratype.0')
-                                                                    <div class="error-feedback">
-                                                                        {{ $message }}
-                                                                    </div>
-                                                                    @enderror
-                                                                </td>
-                                                                <td class="px-1 pr-5">
-                                                                    <input class="form-control" type="text" id="infranamefirst" name="infraname[]" @if (old('infraname.0')) value="{{ old('infraname.0') }}" @endif>
-                                                                    @error('infraname.0')
-                                                                    <div class="error-feedback">
-                                                                        kosong
-                                                                    </div>
-                                                                    @enderror
+                                                                <td colspan="3">
+                                                                    <button onclick="addinfra('', '')" type="button" class="btn btn-secondary btn-sm">
+                                                                        <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
+                                                                        <span class="btn-inner--text">Tambah Infrastruktur</span>
+                                                                    </button>
                                                                 </td>
                                                             </tr>
-                                                            @if (old('infraname'))
-                                                            @for ($i = 1; $i < count(old('infraname')); $i++) <tr>
-                                                                <td>{{$i + 1}}</td>
-                                                                <td class="px-1">
-                                                                    <input type="hidden" name="infraid[]" value="{{ old('infraid.'.$i) }}">
-                                                                    <select id="{{$i}}" name="infratype[]" class="form-control" data-toggle="select">
-                                                                        <!-- <option value="0" disabled selected>Pilih Jenis Infrastruktur</option> -->
-                                                                        @foreach ($infratypes as $infratype)
-                                                                        <option value="{{ $infratype->id }}" {{$infratype->id == old('infratype.'.$i) ? 'selected' : ''}}>
-                                                                            {{ $infratype->name }}
-                                                                        </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                    @error('infratype.'.$i)
-                                                                    <div class="error-feedback">
-                                                                        {{ $message }}
-                                                                    </div>
-                                                                    @enderror
-                                                                </td>
-                                                                <td class="px-1 pr-5"><input class="form-control d-inline mr-2" type="text" name="infraname[]" value="{{ old('infraname.'.$i) }}"><button id="btnName{{ $i }}" onclick="removeinfra('btnName{{ $i }}')" class="btn btn-icon btn-sm btn-outline-danger d-inline" type="button"><span class="btn-inner--icon"><i class="fas fa-trash-alt"></i></span></button>
-                                                                    @error('infraname.'.$i)
-                                                                    <div class="error-feedback">
-                                                                        kosong
-                                                                    </div>
-                                                                    @enderror
-                                                                </td>
-                                                                </tr>
-                                                                @endfor
-                                                                @endif
-                                                                <tr>
-                                                                    <td colspan="3">
-                                                                        <button onclick="addinfra('', '')" type="button" class="btn btn-secondary btn-sm">
-                                                                            <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                                                                            <span class="btn-inner--text">Tambah Infrastruktur</span>
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
+                                                    </tbody>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
@@ -196,7 +208,7 @@
                                             <label class="form-control-label" for="step">Tahapan</label>
                                             <textarea class="form-control" id="step" name="step" rows="5">{{@old('step')}}</textarea>
                                             @error('step')
-                                            <div class="invalid-feedback">
+                                            <div class="error-feedback">
                                                 {{$message}}
                                             </div>
                                             @enderror
@@ -205,7 +217,7 @@
                                             <label class="form-control-label" for="result">Hasil</label>
                                             <textarea class="form-control" id="result" name="result" rows="5">{{@old('result')}}</textarea>
                                             @error('result')
-                                            <div class="invalid-feedback">
+                                            <div class="error-feedback">
                                                 {{$message}}
                                             </div>
                                             @enderror
@@ -214,7 +226,7 @@
                                             <label class="form-control-label" for="summary">Kesimpulan dan Rekomendasi</label>
                                             <textarea class="form-control" id="summary" name="summary" rows="5">{{@old('summary')}}</textarea>
                                             @error('summary')
-                                            <div class="invalid-feedback">
+                                            <div class="error-feedback">
                                                 {{$message}}
                                             </div>
                                             @enderror
@@ -344,7 +356,12 @@
 
 
 <script>
-    var infracount = @if(old('infraname')) {{count(old('infraname'))}} @else 1 @endif;
+    var infracount = @if(old('infraname')) {
+        {
+            count(old('infraname'))
+        }
+    }
+    @else 1 @endif;
 
     function addinfra(infratypeid, infraname) {
         var infratable = document.getElementById('infra-table');
@@ -357,7 +374,7 @@
         var cell3 = row.insertCell(2);
 
         cell2.className = 'px-1';
-        cell3.className = 'pl-1 pr-5';
+        cell3.className = 'pl-1 pr-5 nowrap';
         var buttonid = Date.now();
 
         cell1.innerHTML = infracount;

@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\TemplateContentProcessor;
+use App\Helpers\TemplateProcessor;
+use App\Helpers\Utilities;
 use App\Models\ButirKegiatan;
 use App\Models\IIB8;
 use App\Models\IIB8InfraType;
 use App\Models\InfraType;
 use App\Models\Room;
 use App\Models\Supervisor;
+use App\Models\UserData;
 use Illuminate\Http\Request;
 
 class IIB8Controller extends Controller
@@ -64,6 +68,7 @@ class IIB8Controller extends Controller
             'supervisor' => 'required',
             'infraname.*' => 'required',
             'infratype.*' => 'required',
+            'maintenance_summary' => 'required',
         ]);
 
         $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.8'])->first();
@@ -94,6 +99,7 @@ class IIB8Controller extends Controller
             'documentation' => $docPath,
             'approval_letter' => $approvalLetterPath,
             'supervisor_id' => $request->supervisor,
+            'maintenance_summary' => $request->maintenance_summary
         ]);
 
         for ($i = 0; $i < count($request->infraname); $i++) {
@@ -126,7 +132,20 @@ class IIB8Controller extends Controller
      */
     public function edit($id)
     {
-        //
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.8'])->first();
+        $rooms = Room::all();
+        $infratypes = InfraType::all();
+        $supervisors = Supervisor::all();
+        $iib8 = IIB8::find($id);
+
+        return view('iib8/edit-iib8', [
+            'butirkeg' => $butirkegiatan,
+            'infratypes' => $infratypes,
+            'rooms' => $rooms,
+            'supervisors' => $supervisors,
+            'iib8' => $iib8,
+
+        ]);
     }
 
     /**
@@ -138,7 +157,63 @@ class IIB8Controller extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'date' => 'required',
+            'room' => 'required',
+            'requester' => 'required',
+            'result' => 'required',
+            'step' => 'required',
+            'summary' => 'required',
+            'supervisor' => 'required',
+            'infraname.*' => 'required',
+            'infratype.*' => 'required',
+            'maintenance_summary' => 'required',
+        ]);
+
+        $docPath = '';
+        if ($request->hasFile('documentation')) {
+            $image = $request->file('documentation');
+            $docPath = $image->store('images', 'public');
+        }
+        $approvalLetterPath = '';
+        if ($request->hasFile('approval_letter')) {
+            $image = $request->file('approval_letter');
+            $approvalLetterPath = $image->store('images', 'public');
+        }
+
+        $iib8 = IIB8::find($id);
+        $data = ([
+            'title' => $request->title,
+            'time' => $request->date,
+            'room_id' => $request->room,
+            'result' => $request->result,
+            'step' => $request->step,
+            'summary' => $request->summary,
+            'requester' => $request->requester,
+            'documentation' => $docPath == '' ? $iib8->documentation : $docPath,
+            'approval_letter' => $approvalLetterPath == '' ? $iib8->approval_letter : $approvalLetterPath,
+            'supervisor_id' => $request->supervisor,
+            'maintenance_summary' => $request->maintenance_summary
+        ]);
+        $iib8->update($data);
+
+        if ($request->removedinfra) {
+            IIB8InfraType::whereIn('id', $request->removedinfra)->delete();
+        }
+
+        for ($i = 0; $i < count($request->infratype); $i++) {
+            $infra = new IIB8InfraType();
+            if ($request->infraid[$i]) {
+                $infra = IIB8InfraType::find($request->infraid[$i]);
+            }
+            $infra->IIB8_id = $iib8->id;
+            $infra->infra_type_id = $request->infratype[$i];
+            $infra->infra_name = $request->infraname[$i];
+            $infra->save();
+        }
+
+        return redirect('/IIB8')->with('success-create', 'Data Bukti Fisik telah diubah!');
     }
 
     /**
@@ -149,7 +224,9 @@ class IIB8Controller extends Controller
      */
     public function destroy($id)
     {
-        //
+        $iib8 = IIB8::find($id);
+        $iib8->delete();
+        return redirect('/IIB8')->with('success-delete', 'Data Butir Kegiatan telah dihapus!');
     }
 
     public function getData(Request $request)
@@ -196,5 +273,48 @@ class IIB8Controller extends Controller
             "recordsFiltered" => $recordsFiltered,
             "data" => $activitiesArray
         ]);
+    }
+
+    public function generate($id)
+    {
+        $user = UserData::find(1);
+        $iib9 = array(IIB8::find($id));
+
+        $processor = new TemplateProcessor();
+        $processor->generateWordFile($user, $iib9, function ($phpWord, $table, $iib9) {
+            TemplateContentProcessor::generateIIB8WordContent($phpWord, $table, $iib9);
+        });
+    }
+
+    public function generateApproval($id)
+    {
+        $processor = new TemplateProcessor();
+        $iib8 = array(IIB8::find($id));
+
+        return $processor->generateiib8ApprovalLetter($iib8);
+    }
+
+    public function generateByPeriode(Request $request)
+    {
+        $begin = null;
+        $end = null;
+        if ($request->periode != null) {
+            $periodeJson = json_decode($request->periode, true);
+            $begin = $periodeJson[0];
+            $end = $periodeJson[1];
+        } else {
+            $thisPeriod = Utilities::getSemesterPeriode(date('Y-m-d', strtotime('-6 months')));
+            $begin = $thisPeriod[0];
+            $end = $thisPeriod[1];
+        }
+        $user = UserData::find(1);
+        $iib9 = IIB8::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+
+        if (count($iib9) > 0) {
+            $processor = new TemplateProcessor();
+            $processor->generateWordFile($user, $iib9, function ($phpWord, $table, $iib9) {
+                TemplateContentProcessor::generateIIB8WordContent($phpWord, $table, $iib9);
+            });
+        }
     }
 }
