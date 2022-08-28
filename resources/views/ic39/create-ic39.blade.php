@@ -109,7 +109,7 @@
                                 </div>
                                 <div class="col-12">
                                     <h4 class="mt-3">Nama File</h4>
-                                    <div class="row">
+                                    <div class="row align-items-center">
                                         <div class="col-md-3 mb-3">
                                             <label class="form-control-label" for="prefix">Prefix</label>
                                             <input type="text" class="form-control @error('prefix') is-invalid @enderror" value="{{@old('prefix')}}" id="prefix" name="prefix">
@@ -128,40 +128,66 @@
                                             </div>
                                             @enderror
                                         </div>
+                                        <div class="col-md-3 mb-3">
+                                            <label class="form-control-label" for="title">Suffix Jam Acak</label>
+                                            <div class="mb-3 d-flex align-items-center">
+                                                <label class="mr-3 custom-toggle">
+                                                    <input type="checkbox" name="random_time" id="random_time">
+                                                    <span class="custom-toggle-slider rounded-circle" data-label-off="Tidak" data-label-on="Ya"></span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row align-items-center">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-control-label" for="formula">Formula</label>
+                                            <p>Gunakan field {prefix} {suffix} {date} {time} untuk membuat formula nama file backup</p>
+                                            <input type="text" class="form-control @error('formula') is-invalid @enderror" value="{{@old('formula')}}" id="formula" name="formula">
+                                            @error('formula')
+                                            <div class="invalid-feedback">
+                                                {{$message}}
+                                            </div>
+                                            @enderror
+                                        </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-9 mb-3">
+                                        <div class="col-md-12 mb-3">
                                             <div class="table-responsive py-4">
                                                 <table class="table" id="datatable-id" width="100%">
                                                     <thead class="thead-light">
                                                         <tr>
                                                             <th class="col-1">#</th>
-                                                            <th class="col-3">Tanggal Backup</th>
+                                                            <th class="col-2">Tanggal Backup</th>
                                                             <th class="col-3">Nama File</th>
-                                                            <th class="col-3">Jam Backup</th>
+                                                            <th class="col-2">Jam Backup</th>
+                                                            <th class="col-2">Dokumentasi</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td colspan="3">
-                                                                <button onclick="addbackup('', '')" type="button" class="btn btn-secondary btn-sm">
-                                                                    <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
-                                                                    <span class="btn-inner--text">Tambah Backup</span>
-                                                                </button>
+                                                        @if (old('date'))
+                                                        @for ($i = 0; $i < count(old('date')); $i++) <tr>
+                                                            <td class="px-3 align-middle">{{$i + 1}}</td>
+                                                            <td class="px-3"><input name="date[]" class="form-control" placeholder="Select date" type="date" value="{{old('date.'.$i)}}"></td>
+                                                            <td class="px-3 align-middle"><input type="text" class="form-control" value="{{old('filename.'.$i)}}" name="filename[]"></td>
+                                                            <td class="px-3 align-middle">
+                                                                <p class="d-inline mr-2">{{old('time.'.$i)}}</p><input type="hidden" name="time[]" value="{{old('time.'.$i)}}">
                                                             </td>
-                                                        </tr>
+                                                            <td class="pl-1 pr-5 nowrap"><div class="custom-file d-inline mr-2"><input name="documentation[]" type="file" class="custom-file-input" id="documentation{{$i}}" lang="en" accept="image/*" onchange="previewDocumentation('{{$i}}')"><label class="custom-file-label" for="customFileLang" id="documentationLabel{{$i}}">Select file</label></div><button id="btnName{{$i}}" onclick="removebackup('btnName{{$i}}')" class="btn btn-icon btn-sm btn-outline-danger d-inline" type="button"><span class="btn-inner--icon"><i class="fas fa-trash-alt"></i></span></button></td>
+                                                            </tr>
+                                                            @endfor
+                                                            @endif
+                                                            <tr>
+                                                                <td colspan="3">
+                                                                    <button onclick="addbackup('', '')" type="button" class="btn btn-secondary btn-sm">
+                                                                        <span class="btn-inner--icon"><i class="fas fa-plus"></i></span>
+                                                                        <span class="btn-inner--text">Tambah Backup</span>
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-control-label" for="documentation">Dokumentasi</label>
-                                    <img class="img-preview-documentation img-fluid mb-3 col-sm-5 image-preview" style="display:block">
-                                    <div class="custom-file">
-                                        <input name="documentation" type="file" class="custom-file-input" id="documentation" lang="en" accept="image/*" onchange="previewDocumentation()">
-                                        <label class="custom-file-label" for="customFileLang" id="documentationLabel">Select file</label>
                                     </div>
                                 </div>
                                 <div class="col-12">
@@ -202,7 +228,9 @@
 <script src="/assets/vendor/momentjs/moment-with-locales.js"></script>
 
 <script>
-    var backupcount = 0;
+    // var backupcount = 0;
+
+    var backupcount = @if(old('date')) {{count(old('date'))}} @else 0 @endif;
 
     $('#start-date').datepicker({
         format: 'd M yyyy',
@@ -211,17 +239,10 @@
         format: 'd M yyyy',
     });
 
-    function previewDocumentation(event) {
-        var documentationLabel = document.getElementById('documentationLabel');
-        const documentation = document.querySelector('#documentation');
-        const imgPreview = document.querySelector('.img-preview-documentation');
-        imgPreview.style.display = 'block';
-        const oFReader = new FileReader();
-        oFReader.readAsDataURL(documentation.files[0]);
+    function previewDocumentation(id) {
+        var documentationLabel = document.getElementById('documentationLabel' + id);
+        const documentation = document.getElementById('documentation' + id);
         documentationLabel.innerText = documentation.files[0].name;
-        oFReader.onload = function(OFREvent) {
-            imgPreview.src = OFREvent.target.result;
-        }
     }
 
     function refreshAutoTitle() {
@@ -251,8 +272,17 @@
         refreshAutoTitle()
     }
 
-    function getFileName(prefix, suffix, date) {
-        return prefix + String(date.getDate()).padStart(2, '0') + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getFullYear() + suffix;
+    function getFileName(prefix, suffix, date, time) {
+        var value = document.getElementById('formula').value
+        if (value != '') {
+            value = value.replace('{prefix}', prefix)
+            value = value.replace('{suffix}', suffix)
+            value = value.replace('{date}', String(date.getDate()).padStart(2, '0') + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getFullYear())
+            value = value.replace('{time}', time)
+            return value
+        } else {
+            return prefix + String(date.getDate()).padStart(2, '0') + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getFullYear() + time + suffix;
+        }
     }
 
     function getStringDate(date) {
@@ -280,24 +310,37 @@
         var cell2 = row.insertCell(1);
         var cell3 = row.insertCell(2);
         var cell4 = row.insertCell(3);
+        var cell5 = row.insertCell(4);
 
         cell1.className = 'px-3 align-middle';
         cell2.className = 'px-3';
         cell3.className = 'px-3 align-middle';
-        cell4.className = 'pl-1 pr-5 nowrap';
+        cell4.className = 'px-3 align-middle';
+        cell5.className = 'pl-1 pr-5 nowrap';
         var buttonid = makeButtonId(10);
 
         cell1.innerHTML = backupcount;
         var dateVal = date != '' ? 'value = "' + getStringDate(date) + '"' : ''
-        cell2.innerHTML = '<input name="date" class="form-control" placeholder="Select date" type="date" ' + dateVal + '>'
+        cell2.innerHTML = '<input name="date[]" class="form-control" placeholder="Select date" type="date" ' + dateVal + '>'
+
+        time = ''
+        if (document.getElementById('random_time').checked) {
+            hour = Math.floor(Math.random() * 5);
+            minute = Math.floor(Math.random() * 60);
+            time = String(hour).padStart(2, '0') + '-' + String(minute).padStart(2, '0')
+        }
 
         var prefix = document.getElementById('prefix').value
         var suffix = document.getElementById('suffix').value
+        var filename = ''
         if ((prefix != '' || suffix != '') && date != '') {
-            cell3.innerHTML = getFileName(prefix, suffix, date)
+            filename = getFileName(prefix, suffix, date, time)
+            // cell3.innerHTML = filename + "<input type=\"hidden\" name=\"filename[]\" value=\"" + filename + "\">"
         }
+        cell3.innerHTML = "<input type=\"text\" class=\"form-control\" value=\"" + filename + "\" name=\"filename[]\">"
 
-        cell4.innerHTML = "<input type=\"time\" class=\"form-control d-inline mr-2\" id=\"hour\" name=\"hour\" onchange=\"countNumberBackup()\"><button id=\"btnName" + buttonid + "\" onclick=\"removebackup('btnName" + buttonid + "')\" class=\"btn btn-icon btn-sm btn-outline-danger d-inline\" type=\"button\"><span class=\"btn-inner--icon\"><i class=\"fas fa-trash-alt\"></i></span></button>"
+        cell4.innerHTML = "<p class=\"d-inline mr-2\">" + time + "</p>" + "<input type=\"hidden\" name=\"time[]\" value=\"" + time + "\">"
+        cell5.innerHTML = "<div class=\"custom-file d-inline mr-2\"><input name=\"documentation[]\" type=\"file\" class=\"custom-file-input\" id=\"documentation" + buttonid + "\" lang=\"en\" accept=\"image/*\" onchange=\"previewDocumentation('" + buttonid + "')\"><label class=\"custom-file-label\" for=\"customFileLang\" id=\"documentationLabel" + buttonid + "\">Select file</label></div>" + "<button id=\"btnName" + buttonid + "\" onclick=\"removebackup('btnName" + buttonid + "')\" class=\"btn btn-icon btn-sm btn-outline-danger d-inline\" type=\"button\"><span class=\"btn-inner--icon\"><i class=\"fas fa-trash-alt\"></i></span></button>"
     }
 
     function generateField() {
@@ -322,7 +365,7 @@
         for (var i = 1; i < rowCount - 1; i++) {
             var row = table.rows[i];
             if (row.cells[2]) {
-                var rowObj = row.cells[3].childNodes[1];
+                var rowObj = row.cells[4].childNodes[1];
                 var rowId = row.cells[1].childNodes[0];
                 if (rowObj) {
                     if (rowObj.id == btnName) {

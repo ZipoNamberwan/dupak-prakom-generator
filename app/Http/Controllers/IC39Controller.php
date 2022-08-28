@@ -46,7 +46,35 @@ class IC39Controller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request->file('documentation'));
+
+        $request->validate([
+            'title' => 'required',
+            'dataset' => 'required',
+            'storage' => 'required',
+            'supervisor' => 'required',
+            'filename.*' => 'required',
+            'date.*' => 'required',
+        ]);
+
+        $butirkegiatan = ButirKegiatan::where(['code' => 'I.C.39'])->first();
+
+        for ($i = 0; $i < count($request->date); $i++) {
+            IC39::create([
+                'title' => $request->title . ' pada Tanggal ' . date("d F Y", strtotime($request->date[$i])),
+                'time' => $request->date[$i],
+                'dataset' => $request->dataset,
+                'storage' => $request->storage,
+                'filename' => $request->filename[$i],
+                'storage' => $request->request,
+                'supervisor_id' => $request->supervisor,
+                'user_data_id' => 1,
+                'location_id' => 1,
+                'butir_kegiatan_id' => $butirkegiatan->id,
+            ]);
+        }
+
+        return redirect('/IC39')->with('success-create', 'Butir Kegiatan I.C.39 telah ditambah!');
     }
 
     /**
