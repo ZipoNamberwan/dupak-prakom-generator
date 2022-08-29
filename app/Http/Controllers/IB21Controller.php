@@ -2,6 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ButirKegiatan;
+use App\Models\IB21;
+use App\Models\ServiceMedia;
+use App\Models\ServiceType;
+use App\Models\Supervisor;
 use Illuminate\Http\Request;
 
 class IB21Controller extends Controller
@@ -13,7 +18,8 @@ class IB21Controller extends Controller
      */
     public function index()
     {
-        //
+        $butirkegiatan = ButirKegiatan::where(['code' => 'I.B.21'])->first();
+        return view('ib21/index-ib21', ['butirkeg' => $butirkegiatan]);
     }
 
     /**
@@ -23,7 +29,19 @@ class IB21Controller extends Controller
      */
     public function create()
     {
-        //
+        $butirkegiatan = ButirKegiatan::where(['code' => 'I.B.21'])->first();
+        $supervisors = Supervisor::all();
+        $preferredsp = Supervisor::where(['is_preference' => true])->first()->id;
+        $servicetypes = ServiceType::all();
+        $servicemedias = ServiceMedia::all();
+
+        return view('ib21/create-ib21', [
+            'butirkeg' => $butirkegiatan,
+            'supervisors' => $supervisors,
+            'preferredsp' => $preferredsp,
+            'servicetypes' => $servicetypes,
+            'servicemedias' => $servicemedias,
+        ]);
     }
 
     /**
@@ -80,5 +98,48 @@ class IB21Controller extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getData(Request $request)
+    {
+        $recordsTotal = IB21::count();
+        $recordsFiltered = IB21::where('title', 'like', '%' . $request->search["value"] . '%')
+            ->count();
+
+        $orderColumn = 'time';
+        $orderDir = 'DESC';
+        if ($request->order != null) {
+            if ($request->order[0]['dir'] == 'asc') {
+                $orderDir = 'asc';
+            } else {
+                $orderDir = 'desc';
+            }
+            if ($request->order[0]['column'] == '1') {
+                $orderColumn = 'periode';
+            }
+        }
+        $activities = IB21::where('title', 'like', '%' . $request->search["value"] . '%')
+            ->orderByRaw($orderColumn . ' ' . $orderDir)
+            ->skip($request->start)
+            ->take($request->length)
+            ->get();
+        $activitiesArray = array();
+        $i = 1;
+        foreach ($activities as $activity) {
+            $activityData = array();
+            $activityData["index"] = $i;
+            $activityData["title"] = $activity->title;
+            $activityData["periode"] =  $activity->time;
+            $activityData["service_number"] = count($activity->services);
+            $activityData["id"] = $activity->id;
+            $activitiesArray[] = $activityData;
+            $i++;
+        }
+        return json_encode([
+            "draw" => $request->draw,
+            "recordsTotal" => $recordsTotal,
+            "recordsFiltered" => $recordsFiltered,
+            "data" => $activitiesArray
+        ]);
     }
 }

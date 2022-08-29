@@ -186,6 +186,7 @@ class Version1 extends Migration
             $table->foreignId('supervisor_id')->constrained('supervisor');
             //specific attribute
             $table->text('title');
+            $table->date('time');
             $table->timestamps();
         });
 

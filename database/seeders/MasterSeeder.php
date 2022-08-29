@@ -99,12 +99,23 @@ class MasterSeeder extends Seeder
             'code' => 'I.C',
             'unsur_id' => $i->id
         ]);
+        $ib = SubUnsur::create([
+            'name' => 'Manajemen Layanan TI',
+            'code' => 'I.B',
+            'unsur_id' => $i->id
+        ]);
 
+        ButirKegiatan::create([
+            'name' => 'Mengelola Permintaan Dan Layanan Teknologi Informasi',
+            'code' => 'I.B.21',
+            'subunsur_id' => $ib->id,
+            'credit' => 0.150
+        ]);
         ButirKegiatan::create([
             'name' => 'Melakukan Deteksi Dan Atau Perbaikan Terhadap Permasalahan Infrastruktur TI',
             'code' => 'II.B.12',
             'subunsur_id' => $iib->id,
-            'credit' => 0.02
+            'credit' => 0.030
         ]);
         ButirKegiatan::create([
             'name' => 'Melakukan Pemasangan Infrastruktur TI',
