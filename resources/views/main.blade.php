@@ -69,6 +69,19 @@
                             <div class="collapse @if(substr_count(url()->current(), 'I') == 1) show @endif" id="navbar-componentsI">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
+                                        <a href="#IB21" class="nav-link @if(str_contains(url()->current(), url('/IB21'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IB21">I.B.21 Mengelola Permintaan Dan Layanan Teknologi Informasi</a>
+                                        <div class="collapse @if(str_contains(url()->current(), url('/IB21'))) show @endif" id="IB21">
+                                            <ul class="nav nav-sm flex-column">
+                                                <li class="nav-item">
+                                                    <a href="/IB21" class="nav-link @if(url()->current() == url('/').'/IB21') active @endif">Daftar Kegiatan</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/IB21/show-generate-by-periode" class="nav-link @if(url()->current() == url('/').'/IB21/show-generate-by-periode') active @endif">Generate Bukti Fisik</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li class="nav-item">
                                         <a href="#IC39" class="nav-link @if(str_contains(url()->current(), url('/IC39'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IC39">I.C.39 Melakukan Backup Atau Pemulihan Data</a>
                                         <div class="collapse @if(str_contains(url()->current(), url('/IC39'))) show @endif" id="IC39">
                                             <ul class="nav nav-sm flex-column">
@@ -81,6 +94,7 @@
                                             </ul>
                                         </div>
                                     </li>
+
                                 </ul>
                             </div>
                         </li>

@@ -81,3 +81,15 @@ Route::get('/IIIC8/{id}', [App\Http\Controllers\IIIC8Controller::class, 'show'])
 Route::put('/IIIC8/{id}', [App\Http\Controllers\IIIC8Controller::class, 'update']);
 Route::get('/IIIC8/{id}/edit', [App\Http\Controllers\IIIC8Controller::class, 'edit']);
 Route::get('/IIIC8/{id}/generate', [App\Http\Controllers\IIIC8Controller::class, 'generate']);
+
+Route::get('/IB21', [App\Http\Controllers\IB21Controller::class, 'index']);
+Route::post('/IB21', [App\Http\Controllers\IB21Controller::class, 'store']);
+Route::get('/IB21/data', [App\Http\Controllers\IB21Controller::class, 'getData']);
+Route::get('/IB21/create', [App\Http\Controllers\IB21Controller::class, 'create']);
+Route::get('/IB21/show-generate-by-periode', [App\Http\Controllers\IB21Controller::class, 'showGenerateByPeriode']);
+Route::get('/IB21/generate-by-periode/{periode?}', [App\Http\Controllers\IB21Controller::class, 'generateByPeriode']);
+Route::delete('/IB21/{id}', [App\Http\Controllers\IB21Controller::class, 'destroy']);
+Route::get('/IB21/{id}', [App\Http\Controllers\IB21Controller::class, 'show']);
+Route::put('/IB21/{id}', [App\Http\Controllers\IB21Controller::class, 'update']);
+Route::get('/IB21/{id}/edit', [App\Http\Controllers\IB21Controller::class, 'edit']);
+Route::get('/IB21/{id}/generate', [App\Http\Controllers\IB21Controller::class, 'generate']);

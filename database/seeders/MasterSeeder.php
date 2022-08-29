@@ -6,6 +6,8 @@ use App\Models\ButirKegiatan;
 use App\Models\InfraType;
 use App\Models\Location;
 use App\Models\Room;
+use App\Models\ServiceMedia;
+use App\Models\ServiceType;
 use App\Models\SubUnsur;
 use App\Models\Supervisor;
 use App\Models\Unsur;
@@ -147,5 +149,52 @@ class MasterSeeder extends Seeder
         InfraType::create(
             ['name' => 'Tipe Lainnya']
         );
+
+        ServiceType::create([
+            'name' => 'Perbaikan Jaringan Internet',
+            'type' => 'fix'
+        ]);
+        ServiceType::create([
+            'name' => 'Perbaikan Infrastruktur TI',
+            'type' => 'fix'
+        ]);
+        ServiceType::create([
+            'name' => 'Lainnya',
+            'type' => 'fix'
+        ]);
+        ServiceType::create([
+            'name' => 'Peminjaman Infrastruktur TI',
+            'type' => 'request'
+        ]);
+        ServiceType::create([
+            'name' => 'Peta',
+            'type' => 'request'
+        ]);
+        ServiceType::create([
+            'name' => 'Aksesoris IT',
+            'type' => 'request'
+        ]);
+        ServiceType::create([
+            'name' => 'Cartridge/Toner/Tinta',
+            'type' => 'request'
+        ]);
+        ServiceType::create([
+            'name' => 'UPS',
+            'type' => 'request'
+        ]);
+        ServiceType::create([
+            'name' => 'Lainnya',
+            'type' => 'request'
+        ]);
+
+        ServiceMedia::create([
+            'name' => 'Whatsapp'
+        ]);
+        ServiceMedia::create([
+            'name' => 'Permintaan Langsung'
+        ]);
+        ServiceMedia::create([
+            'name' => 'Lainnya'
+        ]);
     }
 }

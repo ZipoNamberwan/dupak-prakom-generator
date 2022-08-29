@@ -166,6 +166,41 @@ class Version1 extends Migration
             $table->text('link');
             $table->timestamps();
         });
+
+        Schema::create('service_type', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->string('name');
+            $table->enum('type', ['fix', 'request']);
+        });
+
+        Schema::create('service_media', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->string('name');
+        });
+
+        Schema::create('IB21', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->foreignId('user_data_id')->constrained('user_data');
+            $table->foreignId('location_id')->constrained('location');
+            $table->foreignId('butir_kegiatan_id')->constrained('butir_kegiatan');
+            $table->foreignId('supervisor_id')->constrained('supervisor');
+            //specific attribute
+            $table->text('title');
+            $table->timestamps();
+        });
+
+        Schema::create('IB21_service', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->foreignId('IB21_id')->constrained('IB21');
+            $table->date('time');
+            $table->text('description');
+            $table->foreignId('service_type_id')->constrained('service_type');
+            $table->foreignId('service_media_id')->constrained('service_media');
+            $table->text('service');
+            $table->text('requester') ;
+            $table->enum('created_by', ['admin', 'user']);
+            $table->timestamps();
+        });
     }
 
     /**
