@@ -243,10 +243,10 @@ class IIB8Controller extends Controller
             } else {
                 $orderDir = 'desc';
             }
-            if ($request->order[0]['column'] == '2') {
-                $orderColumn = 'title';
-            } else if ($request->order[0]['column'] == '3') {
+            if ($request->order[0]['column'] == '1') {
                 $orderColumn = 'time';
+            } else if ($request->order[0]['column'] == '2') {
+                $orderColumn = 'title';
             }
         }
         $activities = IIB8::where('title', 'like', '%' . $request->search["value"] . '%')
