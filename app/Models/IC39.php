@@ -9,7 +9,7 @@ class IC39 extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $table = 'IC39';
+    protected $table = 'ic39';
 
     public function userDataDetail()
     {

@@ -47,7 +47,7 @@
                     </div>
                     <!-- Card body -->
                     <div class="card-body">
-                        <form autocomplete="off" method="get" action="/IIB9/generate-by-periode" class="needs-validation" enctype="multipart/form-data" novalidate>
+                        <form autocomplete="off" method="get" action="/IC39/generate-by-periode" class="needs-validation" enctype="multipart/form-data" novalidate>
                             <div class="row">
                                 <div class="col-md-4 mb-3">
                                     <label class="form-control-label">Pilih Periode</label>

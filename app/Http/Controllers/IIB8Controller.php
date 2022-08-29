@@ -317,4 +317,26 @@ class IIB8Controller extends Controller
             });
         }
     }
+
+    public function showGenerateByPeriode()
+    {
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.8'])->first();
+        $dupakperiod = Utilities::getAllPeriodeToDate();
+
+        return view('iib8/generate-periode-iib8', [
+            'butirkeg' => $butirkegiatan,
+            'periodes' => $dupakperiod
+        ]);
+    }
+
+    public function showGenerateApprovalByPeriode()
+    {
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.8'])->first();
+        $dupakperiod = Utilities::getAllPeriodeToDate();
+
+        return view('iib8/generate-approval-periode-iib8', [
+            'butirkeg' => $butirkegiatan,
+            'periodes' => $dupakperiod
+        ]);
+    }
 }

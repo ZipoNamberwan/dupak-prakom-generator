@@ -182,4 +182,38 @@ class TemplateContentProcessor
             );
         //content close here    }
     }
+
+    public static function generateIC39WordContent($phpWord, $table, $ic39)
+    {
+        //content here
+        $phpWord->addParagraphStyle('normalContent', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 0.5));
+        $phpWord->addParagraphStyle('normalContentIndent1', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 1));
+        $phpWord->addNumberingStyle(
+            'numbering' . $ic39->id,
+            array(
+                'type'   => 'multilevel',
+                'levels' => array(
+                    array('format' => 'decimal', 'text' => '%1.', 'left' => 360, 'hanging' => 360, 'tabPos' => 360),
+                    array('format' => 'bullet', 'text' => '●', 'left' => 720, 'hanging' => 360, 'tabPos' => 720),
+                ),
+            )
+        );
+
+        $cell = $table->addCell(10000, array('gridSpan' => 4, 'valign' => 'top'));
+
+        $cell->addListItem('Tanggal Backup: ' . date("d F Y", strtotime($ic39->time)), 0, null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
+        $cell->addListItem('Dataset yang dicadangkan: Data ' . $ic39->dataset, 0, null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
+        $cell->addListItem('Media Penyimpanan: ' . $ic39->storage, 0, null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
+        $cell->addListItem('Nama file backup: ' . $ic39->filename, 0, null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
+        $cell->addListItem('Screenshot', 0, $ic39->documentation == null ? array('color' => 'ff0000') : null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
+        if ($ic39->documentation != null)
+            $cell->addImage(
+                'storage/' . $ic39->documentation,
+                array(
+                    'height' => 200,
+                    'wrappingStyle' => 'behind',
+                )
+            );
+        //content close here    }
+    }
 }

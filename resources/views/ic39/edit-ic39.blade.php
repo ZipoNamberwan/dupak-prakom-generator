@@ -47,119 +47,40 @@
                     </div>
                     <!-- Card body -->
                     <div class="card-body">
-                        <form autocomplete="off" method="post" action="/IIB9/{{$iib9->id}}" class="needs-validation" enctype="multipart/form-data" novalidate>
+                        <form autocomplete="off" method="post" action="/IC39/{{$ic39->id}}" class="needs-validation" enctype="multipart/form-data" novalidate>
                             @method('PUT')
                             @csrf
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label class="form-control-label" for="title">Judul</label>
-                                    <div class="mb-3 d-flex align-items-center">
-                                        <label class="mr-3 custom-toggle">
-                                            <input type="checkbox" checked name="automatic_title" id="automatic_title" onchange=changeAutomaticTitle()>
-                                            <span class="custom-toggle-slider rounded-circle" data-label-off="Tidak" data-label-on="Ya"></span>
-                                        </label>
-                                        <span>Judul Otomatis</span>
-                                    </div>
-                                    <input readonly type="text" class="form-control @error('title') is-invalid @enderror" value="{{@old('title', $iib9->title)}}" id="title" name="title">
+                                    <input type="text" class="form-control @error('title') is-invalid @enderror" value="{{@old('title', $ic39->title)}}" id="title" name="title">
                                     @error('title')
                                     <div class="invalid-feedback">
                                         {{$message}}
                                     </div>
                                     @enderror
                                 </div>
-
-                                <div class="col-md-6 mb-3">
-                                    <div class="form-group mb-0">
-                                        <label class="form-control-label" for="exampleDatepicker">Tanggal</label>
-                                        <input name="date" class="form-control @error('date') is-invalid @enderror" placeholder="Select date" type="date" value="{{ @old('date',$iib9->time) }}">
-                                        @error('date')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
+                                <div class="col-md-12 mb-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group mb-0">
+                                                <label class="form-control-label" for="exampleDatepicker">Tanggal</label>
+                                                <input name="date" class="form-control @error('date') is-invalid @enderror" placeholder="Select date" type="date" value="{{ @old('date',$ic39->time) }}">
+                                                @error('date')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                                @enderror
+                                            </div>
                                         </div>
-                                        @enderror
                                     </div>
-                                </div>
-
-                                <div class="col-md-3 mb-3">
-                                    <label class="form-control-label">Lokasi</label>
-                                    <select id="room" name="room" class="form-control" data-toggle="select" onchange="refreshAutoTitle()">
-                                        <option value="0" disabled selected>Pilih Ruangan</option>
-                                        @foreach ($rooms as $room)
-                                        <option value="{{ $room->id }}" {{ old('room',$iib9->roomDetail->id) == $room->id ? 'selected' : '' }}>
-                                            {{ $room->name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    @error('room')
-                                    <div class="error-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
                                 </div>
                                 <div class="col-12">
-                                    <h4 class="mt-3">Informasi Infrastruktur</h4>
-                                    <div class="row">
-                                        <div class="col-md-3 mb-3">
-                                            <label class="form-control-label">Jenis Infrastruktur</label>
-                                            <select id="infratype" name="infratype" class="form-control" data-toggle="select" onchange="refreshAutoTitle()">
-                                                <option value="0" disabled selected>Pilih Jenis Infrastruktur</option>
-                                                @foreach ($infratypes as $infratype)
-                                                <option value="{{ $infratype->id }}" {{ old('infratype', $iib9->infraTypeDetail->id) == $infratype->id ? 'selected' : '' }}>
-                                                    {{ $infratype->name }}
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                            @error('infratype')
-                                            <div class="error-feedback">
-                                                {{ $message }}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-3 mb-3">
-                                            <label class="form-control-label" for="infraname">Nama Infrastruktur</label>
-                                            <input onchange="refreshAutoTitle()" type="text" class="form-control @error('infraname') is-invalid @enderror" value="{{@old('infraname', $iib9->infra_name)}}" id="infraname" name="infraname">
-                                            @error('infraname')
-                                            <div class="invalid-feedback">
-                                                {{$message}}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="infrafunc">Fungsi Infrastruktur</label>
-                                            <input type="text" class="form-control @error('infrafunc') is-invalid @enderror" value="{{@old('infrafunc', $iib9->infra_func)}}" id="infrafunc" name="infrafunc">
-                                            @error('infrafunc')
-                                            <div class="invalid-feedback">
-                                                {{$message}}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-12" id="detection_form">
-                                    <h4 class="mt-3">Pemasangan Infrastruktur TI</h4>
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="background">Latar Belakang dan Tujuan Pemasangan</label>
-                                            <textarea class="form-control" id="background" name="background" rows="5">{{@old('background', $iib9->background)}}</textarea>
-                                            @error('background')
-                                            <div class="invalid-feedback">
-                                                {{$message}}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="step">Tahapan</label>
-                                            <textarea class="form-control" id="step" name="step" rows="5">{{@old('step', $iib9->step)}}</textarea>
-                                            @error('step')
-                                            <div class="invalid-feedback">
-                                                {{$message}}
-                                            </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="summary">Kesimpulan</label>
-                                            <textarea class="form-control" id="summary" name="summary" rows="5">{{@old('summary', $iib9->summary)}}</textarea>
-                                            @error('summary')
+                                            <label class="form-control-label" for="dataset">Dataset</label>
+                                            <input type="text" class="form-control @error('dataset') is-invalid @enderror" value="{{@old('dataset', $ic39->dataset)}}" id="dataset" name="dataset">
+                                            @error('dataset')
                                             <div class="invalid-feedback">
                                                 {{$message}}
                                             </div>
@@ -170,9 +91,22 @@
                                 <div class="col-12">
                                     <div class="row">
                                         <div class="col-md-6 mb-3">
-                                            <label class="form-control-label" for="requester">Pemohon/Pemegang Infrastruktur</label>
-                                            <input type="text" class="form-control @error('requester') is-invalid @enderror" value="{{@old('requester', $iib9->requester)}}" id="requester" name="requester">
-                                            @error('requester')
+                                            <label class="form-control-label" for="storage">Media Penyimpanan</label>
+                                            <input type="text" class="form-control @error('storage') is-invalid @enderror" value="{{@old('storage', $ic39->storage)}}" id="storage" name="storage">
+                                            @error('storage')
+                                            <div class="invalid-feedback">
+                                                {{$message}}
+                                            </div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-control-label" for="filename">Nama File</label>
+                                            <input type="text" class="form-control @error('filename') is-invalid @enderror" value="{{@old('filename', $ic39->filename)}}" id="filename" name="filename">
+                                            @error('filename')
                                             <div class="invalid-feedback">
                                                 {{$message}}
                                             </div>
@@ -182,35 +116,31 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-control-label" for="documentation">Dokumentasi</label>
-                                    <img class="img-preview-documentation img-fluid mb-3 col-sm-5 image-preview" style="display:block" src="@if($iib9->documentation != null) {{asset('storage/' . $iib9->documentation)}} @endif">
+                                    <img class="img-preview-documentation img-fluid mb-3 col-sm-5 image-preview" style="display:block" src="@if($ic39->documentation != null) {{asset('storage/' . $ic39->documentation)}} @endif">
                                     <div class="custom-file">
                                         <input name="documentation" type="file" class="custom-file-input" id="documentation" lang="en" accept="image/*" onchange="previewDocumentation()">
                                         <label class="custom-file-label" for="customFileLang" id="documentationLabel">Select file</label>
                                     </div>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-control-label" for="approval_letter">Surat Persetujuan</label>
-                                    <img class="img-preview-approval-letter img-fluid mb-3 col-sm-5 image-preview" style="display:block" src="@if($iib9->approval_letter != null) {{asset('storage/' . $iib9->approval_letter)}} @endif">
-                                    <div class="custom-file">
-                                        <input name="approval_letter" type="file" class="custom-file-input" id="approval_letter" lang="en" accept="image/*" onchange="previewApprovalLetter()">
-                                        <label class="custom-file-label" for="customFileLang" id="approvalLetterLabel">Select file</label>
+                                <div class="col-md-12 mb-5 mt-2">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <label class="form-control-label">Pejabat Penanda Tangan</label>
+                                            <select id="supervisor" name="supervisor" class="form-control" data-toggle="select">
+                                                <!-- <option value="0" disabled selected>Pilih Pejabat Penanda Tangan</option> -->
+                                                @foreach ($supervisors as $supervisor)
+                                                <option value="{{ $supervisor->id }}" {{ old('supervisor', $ic39->supervisorDetail->id) == $supervisor->id ? 'selected' : '' }}>
+                                                    {{ $supervisor->name }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                            @error('supervisor')
+                                            <div class="error-feedback">
+                                                {{ $message }}
+                                            </div>
+                                            @enderror
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-3 mb-5 mt-2">
-                                    <label class="form-control-label">Pejabat Penanda Tangan</label>
-                                    <select id="supervisor" name="supervisor" class="form-control" data-toggle="select">
-                                        <!-- <option value="0" disabled selected>Pilih Pejabat Penanda Tangan</option> -->
-                                        @foreach ($supervisors as $supervisor)
-                                        <option value="{{ $supervisor->id }}" {{ old('supervisor', $iib9->supervisorDetail->id) == $supervisor->id ? 'selected' : '' }}>
-                                            {{ $supervisor->name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                    @error('supervisor')
-                                    <div class="error-feedback">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
                                 </div>
                             </div>
                             <button class="btn btn-primary" id="sbmtbtn" type="submit">Submit</button>

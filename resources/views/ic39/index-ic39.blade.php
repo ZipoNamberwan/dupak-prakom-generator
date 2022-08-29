@@ -79,8 +79,8 @@
                                 <th>#</th>
                                 <th>Tanggal</th>
                                 <th>Judul</th>
-                                <th>Foto</th>
-                                <th>Jam*</th>
+                                <th>Dataset</th>
+                                <th>Dokumentasi</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -114,76 +114,68 @@
             "type": 'GET'
         },
         "columns": [{
-            "responsivePriority": 8,
-            "width": "2.5%",
-            "orderable": false,
-            "data": "index",
-        }, {
-            "responsivePriority": 3,
-            "width": "5%",
-            "orderable": true,
-            "data": "time",
-            "render": function(data, type, row) {
-                if (type === 'display') {
-                    const today = new Date(data);
-                    const month = ["Januari", "Februari", "Naret", "April", "Mei", "Juni",
-                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-                    ];
-                    return today.getDate() + ' ' + month[today.getMonth()] + ' ' + today.getFullYear();
-                }
-                return data;
-            }
-        }, {
-            "responsivePriority": 1,
-            "width": "12%",
-            "data": "title",
-        }, {
-            "responsivePriority": 4,
-            "width": "7%",
-            "data": "documentation",
-            "render": function(data, type, row) {
-                if (type === 'display') {
-                    if (data == true) {
-                        return '<span class="btn-inner--icon btn-icon btn-sm btn-success"><i class="fas fa-check"></i></span>'
-                    } else {
-                        return '<span class="btn-inner--icon btn-icon btn-sm btn-danger"><i class="fas fa-minus"></i></span>'
+                "responsivePriority": 8,
+                "width": "2.5%",
+                "orderable": false,
+                "data": "index",
+            }, {
+                "responsivePriority": 3,
+                "width": "5%",
+                "orderable": true,
+                "data": "time",
+                "render": function(data, type, row) {
+                    if (type === 'display') {
+                        const today = new Date(data);
+                        const month = ["Januari", "Februari", "Naret", "April", "Mei", "Juni",
+                            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                        ];
+                        return today.getDate() + ' ' + month[today.getMonth()] + ' ' + today.getFullYear();
                     }
+                    return data;
                 }
-                return data;
-            }
-        }, {
-            "responsivePriority": 5,
-            "width": "5%",
-            "data": "hour",
-            "render": function(data, type, row) {
-                if (type === 'display') {
-                    if (data != null) {
-                        return data
-                    } else {
-                        return '-'
+            }, {
+                "responsivePriority": 1,
+                "width": "12%",
+                "data": "title",
+            }, {
+                "responsivePriority": 5,
+                "width": "5%",
+                "data": "dataset"
+            },
+            {
+                "responsivePriority": 4,
+                "width": "7%",
+                "data": "documentation",
+                "render": function(data, type, row) {
+                    if (type === 'display') {
+                        if (data == true) {
+                            return '<span class="btn-inner--icon btn-icon btn-sm btn-success"><i class="fas fa-check"></i></span>'
+                        } else {
+                            return '<span class="btn-inner--icon btn-icon btn-sm btn-danger"><i class="fas fa-minus"></i></span>'
+                        }
                     }
+                    return data;
                 }
-                return data;
+            }, {
+                "responsivePriority": 7,
+                "width": "7%",
+                "orderable": false,
+                "data": "id",
+                "render": function(data, type, row) {
+                    return "<a target=\"_blank\" href=\"/IC39/" + data + "/generate\" class=\"btn btn-outline-success  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
+                        "<span class=\"btn-inner--icon\"><i class=\"fas fa-file-export\"></i></span></a>" +
+                        "<a target=\"_blank\" href=\"/IC39/" + data + "/generate-approval\" class=\"btn btn-outline-warning  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
+                        "<span class=\"btn-inner--icon\"><i class=\"fas fa-file-invoice\"></i></span></a>" +
+                        "<a href=\"/IC39/" + data + "/edit\" class=\"btn btn-outline-info  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
+                        "<span class=\"btn-inner--icon\"><i class=\"fas fa-edit\"></i></span></a>" +
+                        "<form class=\"d-inline\" id=\"formdelete" + data + "\" name=\"formdelete" + data + "\" onsubmit=\"deleteactivity('" + data + "','" + row.title + "')\" method=\"POST\" action=\"/IC39/" + data + "\">" +
+                        '@method("delete")' +
+                        '@csrf' +
+                        "<button class=\"btn btn-icon btn-outline-danger btn-sm\" type=\"submit\" data-toggle=\"tooltip\" data-original-title=\"Hapus Data\">" +
+                        "<span class=\"btn-inner--icon\"><i class=\"fas fa-trash-alt\"></i></span></button></form>";
+                }
             }
-        }, {
-            "responsivePriority": 7,
-            "width": "7%",
-            "orderable": false,
-            "data": "id",
-            "render": function(data, type, row) {
-                return "<a target=\"_blank\" href=\"/IC39/" + data + "/generate\" class=\"btn btn-outline-success  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
-                    "<span class=\"btn-inner--icon\"><i class=\"fas fa-file-export\"></i></span></a>" +
-                    "<a target=\"_blank\" href=\"/IC39/" + data + "/generate-approval\" class=\"btn btn-outline-warning  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
-                    "<span class=\"btn-inner--icon\"><i class=\"fas fa-file-invoice\"></i></span></a>" +
-                    "<a href=\"/IC39/" + data + "/edit\" class=\"btn btn-outline-info  btn-sm\" role=\"button\" aria-pressed=\"true\" data-toggle=\"tooltip\" data-original-title=\"Ubah Data\">" +
-                    "<span class=\"btn-inner--icon\"><i class=\"fas fa-edit\"></i></span></a>" +
-                    "<form class=\"d-inline\" id=\"formdelete" + data + "\" name=\"formdelete" + data + "\" onsubmit=\"deleteactivity('" + data + "','" + row.title + "')\" method=\"POST\" action=\"/IC39/" + data + "\">" +
-                    '@method("delete")' +
-                    '@csrf' +
-                    "<button class=\"btn btn-icon btn-outline-danger btn-sm\" type=\"submit\" data-toggle=\"tooltip\" data-original-title=\"Hapus Data\">" +
-                    "<span class=\"btn-inner--icon\"><i class=\"fas fa-trash-alt\"></i></span></button></form>";
-            }
-        }],
+        ],
         "language": {
             'paginate': {
                 'previous': '<i class="fas fa-angle-left"></i>',
