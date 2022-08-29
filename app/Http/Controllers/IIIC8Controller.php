@@ -6,13 +6,12 @@ use App\Helpers\TemplateContentProcessor;
 use App\Helpers\TemplateProcessor;
 use App\Helpers\Utilities;
 use App\Models\ButirKegiatan;
-use App\Models\IC39;
-use App\Models\InfraType;
+use App\Models\IIIC8;
 use App\Models\Supervisor;
 use App\Models\UserData;
 use Illuminate\Http\Request;
 
-class IC39Controller extends Controller
+class IIIC8Controller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,8 +20,8 @@ class IC39Controller extends Controller
      */
     public function index()
     {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'I.C.39'])->first();
-        return view('ic39/index-ic39', ['butirkeg' => $butirkegiatan]);
+        $butirkegiatan = ButirKegiatan::where(['code' => 'III.C.8'])->first();
+        return view('iiic8/index-iiic8', ['butirkeg' => $butirkegiatan]);
     }
 
     /**
@@ -32,11 +31,11 @@ class IC39Controller extends Controller
      */
     public function create()
     {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'I.C.39'])->first();
+        $butirkegiatan = ButirKegiatan::where(['code' => 'III.C.8'])->first();
         $supervisors = Supervisor::all();
         $preferredsp = Supervisor::where(['is_preference' => true])->first()->id;
 
-        return view('ic39/create-ic39', [
+        return view('iiic8/create-iiic8', [
             'butirkeg' => $butirkegiatan,
             'supervisors' => $supervisors,
             'preferredsp' => $preferredsp,
@@ -53,37 +52,30 @@ class IC39Controller extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'dataset' => 'required',
-            'storage' => 'required',
+            'date' => 'required',
+            'background' => 'required',
+            'data' => 'required',
+            'tools' => 'required',
+            'link' => 'required',
             'supervisor' => 'required',
-            'filename.*' => 'required',
-            'date.*' => 'required',
         ]);
 
-        $butirkegiatan = ButirKegiatan::where(['code' => 'I.C.39'])->first();
+        $butirkegiatan = ButirKegiatan::where(['code' => 'III.C.8'])->first();
 
-        for ($i = 0; $i < count($request->date); $i++) {
+        IIIC8::create([
+            'title' => $request->title,
+            'time' => $request->date,
+            'background' => $request->background,
+            'data' => $request->data,
+            'tools' => $request->tools,
+            'link' => $request->link,
+            'user_data_id' => 1,
+            'location_id' => 1,
+            'butir_kegiatan_id' => $butirkegiatan->id,
+            'supervisor_id' => $request->supervisor,
+        ]);
 
-            $docPath = null;
-            if (array_key_exists($i, $request->file('documentation'))) {
-                $docPath = $request->file('documentation')[$i]->store('images', 'public');
-            }
-
-            IC39::create([
-                'title' => $request->title . ' pada Tanggal ' . date("d F Y", strtotime($request->date[$i])),
-                'time' => $request->date[$i],
-                'dataset' => $request->dataset,
-                'storage' => $request->storage,
-                'filename' => $request->filename[$i],
-                'supervisor_id' => $request->supervisor,
-                'user_data_id' => 1,
-                'location_id' => 1,
-                'butir_kegiatan_id' => $butirkegiatan->id,
-                'documentation' => $docPath,
-            ]);
-        }
-
-        return redirect('/IC39')->with('success-create', 'Butir Kegiatan I.C.39 telah ditambah!');
+        return redirect('/IIIC8')->with('success-create', 'Butir Kegiatan III.C.8 telah ditambah!');
     }
 
     /**
@@ -105,17 +97,14 @@ class IC39Controller extends Controller
      */
     public function edit($id)
     {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'I.C.39'])->first();
-        $infratypes = InfraType::all();
+        $butirkegiatan = ButirKegiatan::where(['code' => 'III.C.8'])->first();
         $supervisors = Supervisor::all();
-        $ic39 = IC39::find($id);
+        $iiic8 = IIIC8::find($id);
 
-        return view('ic39/edit-ic39', [
+        return view('iiic8/edit-iiic8', [
             'butirkeg' => $butirkegiatan,
-            'infratypes' => $infratypes,
             'supervisors' => $supervisors,
-            'ic39' => $ic39,
-
+            'iiic8' => $iiic8
         ]);
     }
 
@@ -130,33 +119,27 @@ class IC39Controller extends Controller
     {
         $request->validate([
             'title' => 'required',
-            'dataset' => 'required',
-            'storage' => 'required',
+            'date' => 'required',
+            'background' => 'required',
+            'data' => 'required',
+            'tools' => 'required',
+            'link' => 'required',
             'supervisor' => 'required',
-            'filename.*' => 'required',
-            'date.*' => 'required',
         ]);
 
-        $docPath = '';
-        if ($request->hasFile('documentation')) {
-            $image = $request->file('documentation');
-            $docPath = $image->store('images', 'public');
-        }
-
-        $ic39 = IC39::find($id);
+        $iiic8 = IIIC8::find($id);
         $data = ([
             'title' => $request->title,
             'time' => $request->date,
-            'dataset' => $request->dataset,
-            'storage' => $request->storage,
-            'filename' => $request->filename,
+            'background' => $request->background,
+            'data' => $request->data,
+            'tools' => $request->tools,
+            'link' => $request->link,
             'supervisor_id' => $request->supervisor,
-            'documentation' => $docPath,
-            'documentation' => $docPath == '' ? $ic39->documentation : $docPath,
         ]);
-        $ic39->update($data);
+        $iiic8->update($data);
 
-        return redirect('/IC39')->with('success-create', 'Data Bukti Fisik telah diubah!');
+        return redirect('/IIIC8')->with('success-create', 'Data Bukti Fisik telah diubah!');
     }
 
     /**
@@ -167,15 +150,15 @@ class IC39Controller extends Controller
      */
     public function destroy($id)
     {
-        $ic39 = IC39::find($id);
-        $ic39->delete();
-        return redirect('/IC39')->with('success-delete', 'Data Butir Kegiatan telah dihapus!');
+        $iiic8 = IIIC8::find($id);
+        $iiic8->delete();
+        return redirect('/IIIC8')->with('success-delete', 'Data Butir Kegiatan telah dihapus!');
     }
 
     public function getData(Request $request)
     {
-        $recordsTotal = IC39::count();
-        $recordsFiltered = IC39::where('title', 'like', '%' . $request->search["value"] . '%')
+        $recordsTotal = IIIC8::count();
+        $recordsFiltered = IIIC8::where('title', 'like', '%' . $request->search["value"] . '%')
             ->count();
 
         $orderColumn = 'time';
@@ -190,11 +173,9 @@ class IC39Controller extends Controller
                 $orderColumn = 'time';
             } else if ($request->order[0]['column'] == '2') {
                 $orderColumn = 'title';
-            } else if ($request->order[0]['column'] == '3') {
-                $orderColumn = 'dataset';
             }
         }
-        $activities = IC39::where('title', 'like', '%' . $request->search["value"] . '%')
+        $activities = IIIC8::where('title', 'like', '%' . $request->search["value"] . '%')
             ->orderByRaw($orderColumn . ' ' . $orderDir)
             ->skip($request->start)
             ->take($request->length)
@@ -206,8 +187,6 @@ class IC39Controller extends Controller
             $activityData["index"] = $i;
             $activityData["title"] = $activity->title;
             $activityData["time"] =  $activity->time;
-            $activityData["documentation"] = $activity->documentation != null ? true : false;
-            $activityData["dataset"] = $activity->dataset;
             $activityData["id"] = $activity->id;
             $activitiesArray[] = $activityData;
             $i++;
@@ -223,11 +202,11 @@ class IC39Controller extends Controller
     public function generate($id)
     {
         $user = UserData::find(1);
-        $ic39 = array(IC39::find($id));
+        $iiic8 = array(IIIC8::find($id));
 
         $processor = new TemplateProcessor();
-        $processor->generateWordFile($user, $ic39, function ($phpWord, $table, $ic39) {
-            TemplateContentProcessor::generateIC39WordContent($phpWord, $table, $ic39);
+        $processor->generateWordFile($user, $iiic8, function ($phpWord, $table, $iiic8) {
+            TemplateContentProcessor::generateIIIC8WordContent($phpWord, $table, $iiic8);
         });
     }
 
@@ -245,22 +224,22 @@ class IC39Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $ic39 = IC39::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+        $iiic8 = IIIC8::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
 
-        if (count($ic39) > 0) {
+        if (count($iiic8) > 0) {
             $processor = new TemplateProcessor();
-            $processor->generateWordFile($user, $ic39, function ($phpWord, $table, $ic39) {
-                TemplateContentProcessor::generateIC39WordContent($phpWord, $table, $ic39);
+            $processor->generateWordFile($user, $iiic8, function ($phpWord, $table, $iiic8) {
+                TemplateContentProcessor::generateIIIC8WordContent($phpWord, $table, $iiic8);
             });
         }
     }
 
     public function showGenerateByPeriode()
     {
-        $butirkegiatan = ButirKegiatan::where(['code' => 'I.C.39'])->first();
+        $butirkegiatan = ButirKegiatan::where(['code' => 'II.B.12'])->first();
         $dupakperiod = Utilities::getAllPeriodeToDate();
 
-        return view('ic39/generate-periode-ic39', [
+        return view('iiic8/generate-periode-iiic8', [
             'butirkeg' => $butirkegiatan,
             'periodes' => $dupakperiod
         ]);

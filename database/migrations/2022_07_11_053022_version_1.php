@@ -150,6 +150,22 @@ class Version1 extends Migration
             $table->text('documentation')->nullable();
             $table->timestamps();
         });
+
+        Schema::create('IIIC8', function (Blueprint $table) {
+            $table->id()->autoincrement();
+            $table->foreignId('user_data_id')->constrained('user_data');
+            $table->foreignId('location_id')->constrained('location');
+            $table->foreignId('butir_kegiatan_id')->constrained('butir_kegiatan');
+            $table->foreignId('supervisor_id')->constrained('supervisor');
+            //specific attribute
+            $table->text('title');
+            $table->date('time');
+            $table->string('background');
+            $table->text('data');
+            $table->text('tools');
+            $table->text('link');
+            $table->timestamps();
+        });
     }
 
     /**

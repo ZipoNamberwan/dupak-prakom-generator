@@ -69,6 +69,15 @@ class MasterSeeder extends Seeder
             'name' => 'Lobby',
         ]);
 
+        $iii = Unsur::create([
+            'name' => 'Sistem Informasi dan Multimedia',
+            'code' => 'III'
+        ]);
+        $iiic = SubUnsur::create([
+            'name' => 'Area TI Spesial/Khusus',
+            'code' => 'III.C',
+            'unsur_id' => $iii->id
+        ]);
         $ii = Unsur::create([
             'name' => 'Infrastruktur Teknologi Informasi',
             'code' => 'II'
@@ -112,6 +121,12 @@ class MasterSeeder extends Seeder
             'code' => 'I.C.39',
             'subunsur_id' => $ic->id,
             'credit' => 0.020
+        ]);
+        ButirKegiatan::create([
+            'name' => 'Membuat Obyek Multimedia Kompleks Dengan Peranti Lunak',
+            'code' => 'III.C.8',
+            'subunsur_id' => $iiic->id,
+            'credit' => 0.165
         ]);
 
         InfraType::create(

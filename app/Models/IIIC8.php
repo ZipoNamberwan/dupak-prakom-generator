@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IC39 extends Model
+class IIIC8 extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $table = 'IC39';
+    protected $table = 'IIIC8';
 
     public function userDataDetail()
     {

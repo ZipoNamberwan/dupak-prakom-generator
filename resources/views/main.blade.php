@@ -62,11 +62,11 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @if(str_contains(url()->current(), url('/I'))) active @endif" href="#navbar-componentsI" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-componentsI">
+                            <a class="nav-link @if(substr_count(url()->current(), 'I') == 1) active @endif" href="#navbar-componentsI" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-componentsI">
                                 <i class="fas fa-star text-danger"></i>
                                 <span class="nav-link-text">I. Tata Kelola dan tata Laksana Teknologi Informasi</span>
                             </a>
-                            <div class="collapse @if(str_contains(url()->current(), url('/I'))) show @endif" id="navbar-componentsI">
+                            <div class="collapse @if(substr_count(url()->current(), 'I') == 1) show @endif" id="navbar-componentsI">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
                                         <a href="#IC39" class="nav-link @if(str_contains(url()->current(), url('/IC39'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IC39">I.C.39 Melakukan Backup Atau Pemulihan Data</a>
@@ -85,11 +85,11 @@
                             </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link @if(str_contains(url()->current(), url('/II'))) active @endif" href="#navbar-componentsII" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-componentsII">
+                            <a class="nav-link @if(substr_count(url()->current(), 'I') == 2) active @endif" href="#navbar-componentsII" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-componentsII">
                                 <i class="ni ni-ui-04 text-info"></i>
                                 <span class="nav-link-text">II. Infrastruktur Teknologi Informasi</span>
                             </a>
-                            <div class="collapse @if(str_contains(url()->current(), url('/II'))) show @endif" id="navbar-componentsII">
+                            <div class="collapse @if(substr_count(url()->current(), 'I') == 2) show @endif" id="navbar-componentsII">
                                 <ul class="nav nav-sm flex-column">
                                     <li class="nav-item">
                                         <a href="#IIB8" class="nav-link @if(str_contains(url()->current(), url('/IIB8'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IIB8">II.B.8 Pemeliharaan Infrastruktur TI</a>
@@ -135,6 +135,29 @@
                                                 </li>
                                                 <li class="nav-item">
                                                     <a href="/IIB12/show-generate-approval-by-periode" class="nav-link @if(url()->current() == url('/').'/IIB12/show-generate-approval-by-periode') active @endif">Generate Lembar Persetujuan</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link @if(substr_count(url()->current(), 'I') == 3) active @endif" href="#navbar-componentsIII" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="navbar-componentsIII">
+                                <i class="fas fa-satellite text-success"></i>
+                                <span class="nav-link-text">III. Sistem Informasi dan Multimedia</span>
+                            </a>
+                            <div class="collapse @if(substr_count(url()->current(), 'I') == 3) show @endif" id="navbar-componentsIII">
+                                <ul class="nav nav-sm flex-column">
+                                    <li class="nav-item">
+                                        <a href="#IIIC8" class="nav-link @if(str_contains(url()->current(), url('/IIIC8'))) active @endif" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="IIIC8">III.C.8 Membuat Obyek Multimedia Kompleks Dengan Peranti Lunak</a>
+                                        <div class="collapse @if(str_contains(url()->current(), url('/IIIC8'))) show @endif" id="IIIC8">
+                                            <ul class="nav nav-sm flex-column">
+                                                <li class="nav-item">
+                                                    <a href="/IIIC8" class="nav-link @if(url()->current() == url('/').'/IIIC8') active @endif">Daftar Kegiatan</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a href="/IIIC8/show-generate-by-periode" class="nav-link @if(url()->current() == url('/').'/IIIC8/show-generate-by-periode') active @endif">Generate Bukti Fisik</a>
                                                 </li>
                                             </ul>
                                         </div>

@@ -216,4 +216,34 @@ class TemplateContentProcessor
             );
         //content close here    }
     }
+
+    public static function generateIIIC8WordContent($phpWord, $table, $iiic8)
+    {
+        //content here
+        $phpWord->addParagraphStyle('normalContent', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 0.5));
+        $phpWord->addParagraphStyle('normalContentIndent1', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 1));
+        $phpWord->addNumberingStyle(
+            'numbering' . $iiic8->id,
+            array(
+                'type'   => 'multilevel',
+                'levels' => array(
+                    array('format' => 'decimal', 'text' => '%1.', 'left' => 360, 'hanging' => 360, 'tabPos' => 360),
+                    array('format' => 'bullet', 'text' => '●', 'left' => 720, 'hanging' => 360, 'tabPos' => 720),
+                ),
+            )
+        );
+
+        $cell = $table->addCell(10000, array('gridSpan' => 4, 'valign' => 'top'));
+
+        $cell->addListItem('Deskripsi dan Latar Belakang', 0, null, 'numbering' . $iiic8->id);
+        $cell->addText(Utilities::transformHTMLToWord($iiic8->background), null, 'normalContent');
+        $cell->addListItem('Data dan Informasi yang Digunakan', 0, null, 'numbering' . $iiic8->id);
+        $cell->addText(Utilities::transformHTMLToWord($iiic8->data), null, 'normalContent');
+        $cell->addListItem('Hardware dan Software yang Digunakan', 0, null, 'numbering' . $iiic8->id);
+        $cell->addText(Utilities::transformHTMLToWord($iiic8->tools), null, 'normalContent');
+        $cell->addListItem('Hasil', 0, null, 'numbering' . $iiic8->id);
+        $cell->addText(Utilities::transformHTMLToWord($iiic8->link), null, 'normalContent');
+        
+        //content close here    }
+    }
 }

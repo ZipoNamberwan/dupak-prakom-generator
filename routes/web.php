@@ -69,3 +69,15 @@ Route::get('/IC39/{id}', [App\Http\Controllers\IC39Controller::class, 'show']);
 Route::put('/IC39/{id}', [App\Http\Controllers\IC39Controller::class, 'update']);
 Route::get('/IC39/{id}/edit', [App\Http\Controllers\IC39Controller::class, 'edit']);
 Route::get('/IC39/{id}/generate', [App\Http\Controllers\IC39Controller::class, 'generate']);
+
+Route::get('/IIIC8', [App\Http\Controllers\IIIC8Controller::class, 'index']);
+Route::post('/IIIC8', [App\Http\Controllers\IIIC8Controller::class, 'store']);
+Route::get('/IIIC8/data', [App\Http\Controllers\IIIC8Controller::class, 'getData']);
+Route::get('/IIIC8/create', [App\Http\Controllers\IIIC8Controller::class, 'create']);
+Route::get('/IIIC8/show-generate-by-periode', [App\Http\Controllers\IIIC8Controller::class, 'showGenerateByPeriode']);
+Route::get('/IIIC8/generate-by-periode/{periode?}', [App\Http\Controllers\IIIC8Controller::class, 'generateByPeriode']);
+Route::delete('/IIIC8/{id}', [App\Http\Controllers\IIIC8Controller::class, 'destroy']);
+Route::get('/IIIC8/{id}', [App\Http\Controllers\IIIC8Controller::class, 'show']);
+Route::put('/IIIC8/{id}', [App\Http\Controllers\IIIC8Controller::class, 'update']);
+Route::get('/IIIC8/{id}/edit', [App\Http\Controllers\IIIC8Controller::class, 'edit']);
+Route::get('/IIIC8/{id}/generate', [App\Http\Controllers\IIIC8Controller::class, 'generate']);

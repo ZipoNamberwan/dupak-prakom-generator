@@ -11,4 +11,9 @@ class Unsur extends Model
     protected $guarded = [];
     protected $table = 'unsur';
     public $timestamps = false;
+
+    public function subunsurs()
+    {
+        return $this->hasMany(SubUnsur::class, 'unsur_id', 'id');
+    }
 }
