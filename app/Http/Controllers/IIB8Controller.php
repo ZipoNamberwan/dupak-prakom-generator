@@ -90,7 +90,6 @@ class IIB8Controller extends Controller
             'result' => $request->result,
             'step' => $request->step,
             'summary' => $request->summary,
-            'documentation' => $request->documentation,
             'approval_letter' => $request->approval_letter,
             'user_data_id' => 1,
             'location_id' => 1,
@@ -144,7 +143,6 @@ class IIB8Controller extends Controller
             'rooms' => $rooms,
             'supervisors' => $supervisors,
             'iib8' => $iib8,
-
         ]);
     }
 

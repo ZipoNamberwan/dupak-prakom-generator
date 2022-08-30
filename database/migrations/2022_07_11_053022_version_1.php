@@ -192,13 +192,13 @@ class Version1 extends Migration
 
         Schema::create('IB21_service', function (Blueprint $table) {
             $table->id()->autoincrement();
-            $table->foreignId('IB21_id')->constrained('IB21');
-            $table->date('time');
+            $table->foreignId('IB21_id')->constrained('IB21')->onUpdate('cascade')->onDelete('cascade');
+            $table->date('time')->nullable();
             $table->text('description');
             $table->foreignId('service_type_id')->constrained('service_type');
             $table->foreignId('service_media_id')->constrained('service_media');
             $table->text('service');
-            $table->text('requester') ;
+            $table->text('requester')->nullable();
             $table->enum('created_by', ['admin', 'user']);
             $table->timestamps();
         });

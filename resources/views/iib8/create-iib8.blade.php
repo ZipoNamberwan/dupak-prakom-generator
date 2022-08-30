@@ -415,7 +415,6 @@
     }
 
     function appendremovedactivity(id) {
-        console.log(id)
         var form = document.getElementById('formupdate');
         var hidden = document.createElement("input");
         hidden.setAttribute("type", "hidden");

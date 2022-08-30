@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\TemplateContentProcessor;
+use App\Helpers\TemplateProcessor;
+use App\Helpers\Utilities;
 use App\Models\ButirKegiatan;
 use App\Models\IB21;
+use App\Models\IB21Service;
 use App\Models\ServiceMedia;
 use App\Models\ServiceType;
 use App\Models\Supervisor;
+use App\Models\UserData;
+use App\Rules\IB21Period;
 use Illuminate\Http\Request;
 
 class IB21Controller extends Controller
@@ -52,7 +58,45 @@ class IB21Controller extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'date' => [
+                'required',
+                new IB21Period()
+            ],
+            'supervisor' => 'required',
+            'description.*' => 'required',
+            'servicemedia.*' => 'required',
+            'servicetype.*' => 'required',
+            'service.*' => 'required',
+        ]);
+
+
+        $butirkegiatan = ButirKegiatan::where(['code' => 'I.B.21'])->first();
+
+        $ib21 = IB21::create([
+            'title' => $request->title,
+            'time' => $request->date,
+            'user_data_id' => 1,
+            'location_id' => 1,
+            'butir_kegiatan_id' => $butirkegiatan->id,
+            'supervisor_id' => $request->supervisor,
+        ]);
+
+        for ($i = 0; $i < count($request->servicetype); $i++) {
+            IB21Service::create([
+                'Ib21_id' => $ib21->id,
+                'time' => $request->servicedate[$i],
+                'description' => $request->description[$i],
+                'service_type_id' => $request->servicetype[$i],
+                'service_media_id' => $request->servicemedia[$i],
+                'service' => $request->service[$i],
+                'requester' => $request->requester[$i],
+                'created_by' => 'admin'
+            ]);
+        }
+
+        return redirect('/IB21')->with('success-create', 'Butir Kegiatan I.B.21 telah ditambah!');
     }
 
     /**
@@ -74,7 +118,19 @@ class IB21Controller extends Controller
      */
     public function edit($id)
     {
-        //
+        $butirkegiatan = ButirKegiatan::where(['code' => 'I.B.21'])->first();
+        $supervisors = Supervisor::all();
+        $servicetypes = ServiceType::all();
+        $servicemedias = ServiceMedia::all();
+        $ib21 = IB21::find($id);
+
+        return view('ib21/edit-ib21', [
+            'butirkeg' => $butirkegiatan,
+            'supervisors' => $supervisors,
+            'servicetypes' => $servicetypes,
+            'servicemedias' => $servicemedias,
+            'ib21' => $ib21,
+        ]);
     }
 
     /**
@@ -86,7 +142,46 @@ class IB21Controller extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'date' => 'required',
+            'supervisor' => 'required',
+            'description.*' => 'required',
+            'servicemedia.*' => 'required',
+            'servicetype.*' => 'required',
+            'service.*' => 'required',
+        ]);
+
+        $ib21 = IB21::find($id);
+        $data = ([
+            'title' => $request->title,
+            'time' => $request->date,
+            'supervisor_id' => $request->supervisor,
+        ]);
+        $ib21->update($data);
+
+        if ($request->removedservice) {
+            IB21Service::whereIn('id', $request->removedservice)->delete();
+        }
+
+        for ($i = 0; $i < count($request->service); $i++) {
+            $service = new IB21Service();
+            if ($request->serviceid[$i]) {
+                $service = IB21Service::find($request->serviceid[$i]);
+            }
+            $service->IB21_id = $ib21->id;
+            $service->time = $request->servicedate[$i];
+            $service->description = $request->description[$i];
+            $service->service_type_id = $request->servicetype[$i];
+            $service->service_media_id = $request->servicemedia[$i];
+            $service->service = $request->service[$i];
+            $service->requester = $request->requester[$i];
+            $service->created_by = 'admin';
+
+            $service->save();
+        }
+
+        return redirect('/IB21')->with('success-create', 'Data Bukti Fisik telah diubah!');
     }
 
     /**
@@ -97,7 +192,9 @@ class IB21Controller extends Controller
      */
     public function destroy($id)
     {
-        //
+        $ib21 = IB21::find($id);
+        $ib21->delete();
+        return redirect('/IB21')->with('success-delete', 'Data Butir Kegiatan telah dihapus!');
     }
 
     public function getData(Request $request)
@@ -130,7 +227,7 @@ class IB21Controller extends Controller
             $activityData["index"] = $i;
             $activityData["title"] = $activity->title;
             $activityData["periode"] =  $activity->time;
-            $activityData["service_number"] = count($activity->services);
+            $activityData["services_number"] = count($activity->services);
             $activityData["id"] = $activity->id;
             $activitiesArray[] = $activityData;
             $i++;
@@ -140,6 +237,52 @@ class IB21Controller extends Controller
             "recordsTotal" => $recordsTotal,
             "recordsFiltered" => $recordsFiltered,
             "data" => $activitiesArray
+        ]);
+    }
+
+    public function generate($id)
+    {
+        $user = UserData::find(1);
+        $ib21 = array(IB21::find($id));
+
+        $processor = new TemplateProcessor();
+        $processor->generateWordFile($user, $ib21, function ($phpWord, $table, $ib21) {
+            TemplateContentProcessor::generateIB21WordContent($phpWord, $table, $ib21);
+        });
+    }
+
+    public function generateByPeriode(Request $request)
+    {
+        $begin = null;
+        $end = null;
+        if ($request->periode != null) {
+            $periodeJson = json_decode($request->periode, true);
+            $begin = $periodeJson[0];
+            $end = $periodeJson[1];
+        } else {
+            $thisPeriod = Utilities::getSemesterPeriode(date('Y-m-d', strtotime('-6 months')));
+            $begin = $thisPeriod[0];
+            $end = $thisPeriod[1];
+        }
+        $user = UserData::find(1);
+        $ib21 = IB21::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+
+        if (count($ib21) > 0) {
+            $processor = new TemplateProcessor();
+            $processor->generateWordFile($user, $ib21, function ($phpWord, $table, $ib21) {
+                TemplateContentProcessor::generateIB21WordContent($phpWord, $table, $ib21);
+            });
+        }
+    }
+
+    public function showGenerateByPeriode()
+    {
+        $butirkegiatan = ButirKegiatan::where(['code' => 'I.B.21'])->first();
+        $dupakperiod = Utilities::getAllPeriodeToDate();
+
+        return view('ib21/generate-periode-ib21', [
+            'butirkeg' => $butirkegiatan,
+            'periodes' => $dupakperiod
         ]);
     }
 }

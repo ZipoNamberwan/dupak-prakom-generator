@@ -243,7 +243,65 @@ class TemplateContentProcessor
         $cell->addText(Utilities::transformHTMLToWord($iiic8->tools), null, 'normalContent');
         $cell->addListItem('Hasil', 0, null, 'numbering' . $iiic8->id);
         $cell->addText(Utilities::transformHTMLToWord($iiic8->link), null, 'normalContent');
-        
+
+        //content close here    }
+    }
+
+    public static function generateIB21WordContent($phpWord, $table, $ib21)
+    {
+        //content here
+        $phpWord->addParagraphStyle('normalContent', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 0.5));
+        $phpWord->addParagraphStyle('normalContentIndent1', array('spacing' => 180, 'spaceAfter' => 0, 'indent' => 1));
+        $phpWord->addParagraphStyle('normalCenter', array('alignment' => \PhpOffice\PhpWord\SimpleType\Jc::CENTER, 'spaceAfter' => 0));
+        $phpWord->addNumberingStyle(
+            'numbering' . $ib21->id,
+            array(
+                'type'   => 'multilevel',
+                'levels' => array(
+                    array('format' => 'decimal', 'text' => '%1.', 'left' => 360, 'hanging' => 360, 'tabPos' => 360),
+                    array('format' => 'bullet', 'text' => '●', 'left' => 720, 'hanging' => 360, 'tabPos' => 720),
+                ),
+            )
+        );
+
+        $cell = $table->addCell(10000, array('gridSpan' => 4, 'valign' => 'top'));
+
+        $cell->addText('Laporan Permintaan dan Layanan Teknologi Informasi', array('bold' => true), 'normalCenter');
+        $cell->addTextBreak();
+        $cell->addText('Periode' . "\t\t\t" . ': ' . date("F", strtotime($ib21->time)) . ' ' . date("Y", strtotime($ib21->time)), null, 'normalContent');
+        $cell->addText('Jumlah Permintaan' . "\t\t" . ': ' . count($ib21->services), null, 'normalContent');
+
+        $tableStyle = array(
+            'borderColor' => '000000',
+            'borderSize'  => 6,
+            'cellMargin'  => 70,
+            'indent' => new  TblWidth(360)
+        );
+        $phpWord->addTableStyle('table_service', $tableStyle);
+        $table = $cell->addTable('table_service');
+        $tableCellStyle = array('valign' => 'top');
+
+        $i = 1;
+        $table->addRow();
+        $table->addCell(400, $tableCellStyle)->addText('No', array('bold' => true), 'normalCenter');
+        $table->addCell(3000, $tableCellStyle)->addText('Layanan yang Diminta', array('bold' => true), 'normalCenter');
+        $table->addCell(1000, $tableCellStyle)->addText('Jenis Layanan', array('bold' => true), 'normalCenter');
+        $table->addCell(1000, $tableCellStyle)->addText('Sarana', array('bold' => true), 'normalCenter');
+        $table->addCell(3000, $tableCellStyle)->addText('Cara Pemenuhan Permintaan', array('bold' => true), 'normalCenter');
+
+        foreach ($ib21->services as $service) {
+            $table->addRow();
+            $table->addCell(400, $tableCellStyle)->addText($i, null, 'normal');
+            $table->addCell(3000, $tableCellStyle)->addText($service->description, null, 'normal');
+            $table->addCell(1000, $tableCellStyle)->addText($service->serviceTypeDetail->name, null, 'normal');
+            $table->addCell(1000, $tableCellStyle)->addText($service->serviceMediaDetail->name, null, 'normal');
+            $table->addCell(3000, $tableCellStyle)->addText($service->service, null, 'normal');
+            $i++;
+        }
+
+        $cell->addTextBreak();
+        $cell->addTextBreak();
+
         //content close here    }
     }
 }

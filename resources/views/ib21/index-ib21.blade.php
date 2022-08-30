@@ -121,6 +121,16 @@
             "width": "5%",
             "orderable": true,
             "data": "periode",
+            "render": function(data, type, row) {
+                if (type === 'display') {
+                    const today = new Date(data);
+                    const month = ["Januari", "Februari", "Naret", "April", "Mei", "Juni",
+                        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+                    ];
+                    return month[today.getMonth()] + ' ' + today.getFullYear();
+                }
+                return data;
+            }
         }, {
             "responsivePriority": 1,
             "width": "12%",
