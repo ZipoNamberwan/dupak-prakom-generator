@@ -265,7 +265,7 @@ class IB21Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $ib21 = IB21::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+        $ib21 = IB21::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->orderBy('time')->get();
 
         if (count($ib21) > 0) {
             $processor = new TemplateProcessor();

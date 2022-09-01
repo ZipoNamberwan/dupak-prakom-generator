@@ -245,7 +245,7 @@ class IC39Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $ic39 = IC39::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+        $ic39 = IC39::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->orderBy('time')->get();
 
         if (count($ic39) > 0) {
             $processor = new TemplateProcessor();

@@ -5,6 +5,7 @@ namespace App\Helpers;
 use DateInterval;
 use DatePeriod;
 use DateTime;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class Utilities
@@ -56,13 +57,40 @@ class Utilities
         return $dupakperiod;
     }
 
-    public static function getActivityNumber($activity){
+    public static function getActivityNumber($activity)
+    {
+        // dd($activity->time);
+        $period = Utilities::getSemesterPeriode($activity->time);
         $code = $activity->butirKegiatanDetail->code;
-        $subunsurcode = $activity->butirKegiatanDetail->subUnsurDetail->code;
         $butirkegs = $activity->butirKegiatanDetail->subUnsurDetail->butirkegiatans;
         $butirkegs = $butirkegs->sort(function ($a, $b) {
-            
+            $n1 = explode('.', $a->code);
+            $n2 = explode('.', $b->code);
+            $n1 = (int) $n1[2];
+            $n2 = (int) $n2[2];
+            return $n1 > $n2;
         });
-        dd($butirkegs);
+        $codeArray = array();
+        $i = 1;
+        foreach ($butirkegs as $b) {
+            $codeArray[$b->code] = $i;
+            $i++;
+        }
+        $totalbefore = 0;
+        for ($i = 0; $i < $codeArray[$code] - 1; $i++) {
+            $keys = array_keys($codeArray);
+            $totalbefore = $totalbefore + DB::table(strtolower(str_replace('.', '', $keys[$i])))
+                ->where('time', '>=', $period[0])->where('time', '<=', $period[1])->count();
+        }
+        $data = DB::table(strtolower(str_replace('.', '', $code)))->orderBy('time', 'asc')->get();
+        $rownumber = 0;
+        foreach ($data as $d) {
+            $rownumber++;
+            if ($d->id == $activity->id) {
+                break;
+            }
+        }
+        $final = $totalbefore + $rownumber;
+        return $final;
     }
 }

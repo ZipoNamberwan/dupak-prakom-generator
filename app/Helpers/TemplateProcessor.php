@@ -58,7 +58,7 @@ class TemplateProcessor
             $table->addCell(2500, $tableCellStyle)->addText('Jenjang Jabatan', array('bold' => true), 'normal');
             $table->addCell(2500, $tableCellStyle)->addText($user->pos, null, 'normal');
             $table->addCell(2500, array('vMerge' => 'restart'))->addText('Nomor Urut di laporan kegiatan', array('bold' => true), 'normal');
-            $table->addCell(2500, array('vMerge' => 'restart'))->addText($a->butirKegiatanDetail->subUnsurDetail->code . '.xxx', null, 'normal');
+            $table->addCell(2500, array('vMerge' => 'restart'))->addText($a->butirKegiatanDetail->subUnsurDetail->code . '.' . Utilities::getActivityNumber($a), null, 'normal');
             $table->addRow();
             $table->addCell(5000, array('gridSpan' => 2, 'valign' => 'top'))->addText('BUTIR KEGIATAN: ' . $a->butirKegiatanDetail->code . ' ' . $a->butirKegiatanDetail->name, array('bold' => true), 'normal');
             $table->addCell(2500, array('vMerge' => 'continue'));
@@ -78,7 +78,7 @@ class TemplateProcessor
             $cell->addText('Mengetahui', null, 'normalCenter');
             $cell->addText($a->supervisorDetail->pos, null, 'normalCenter');
             $cell = $table->addCell(5000, array('gridSpan' => 2, 'valign' => 'top'));
-            $cell->addText('Probolinggo, 31 Januari 2022', null, 'normalCenter');
+            $cell->addText('Probolinggo, ' . date("d F Y", strtotime(Utilities::getSemesterPeriode($a->time)[1])), null, 'normalCenter');
             $cell->addText('Pejabat Pranata Komputer', null, 'normalCenter');
             $table->addRow();
             $cell = $table->addCell(5000, array('gridSpan' => 2, 'valign' => 'top'));

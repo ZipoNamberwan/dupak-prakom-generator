@@ -306,7 +306,7 @@ class IIB8Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $iib9 = IIB8::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+        $iib9 = IIB8::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->orderBy('time')->get();
 
         if (count($iib9) > 0) {
             $processor = new TemplateProcessor();

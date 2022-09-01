@@ -131,8 +131,6 @@ class IIB9Controller extends Controller
         $supervisors = Supervisor::all();
         $iib9 = IIB9::find($id);
 
-        Utilities::getActivityNumber($iib9);
-
         return view('iib9/edit-iib9', [
             'butirkeg' => $butirkegiatan,
             'infratypes' => $infratypes,
@@ -289,7 +287,7 @@ class IIB9Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $iib9 = IIB9::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+        $iib9 = IIB9::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->orderBy('time')->get();
 
         if (count($iib9) > 0) {
             $processor = new TemplateProcessor();
@@ -313,7 +311,7 @@ class IIB9Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $iib9 = IIB9::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+        $iib9 = IIB9::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->orderBy('time')->get();
 
         if (count($iib9) > 0) {
             $processor = new TemplateProcessor();

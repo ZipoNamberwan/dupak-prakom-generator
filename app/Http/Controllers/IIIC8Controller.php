@@ -224,7 +224,7 @@ class IIIC8Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $iiic8 = IIIC8::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->get();
+        $iiic8 = IIIC8::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->orderBy('time')->get();
 
         if (count($iiic8) > 0) {
             $processor = new TemplateProcessor();
