@@ -54,7 +54,7 @@ class Version1 extends Migration
             $table->id()->autoincrement();
             $table->string('code');
             $table->string('name');
-            $table->decimal('credit', 8, 4);
+            $table->decimal('credit', 8, 3);
             $table->foreignId('subunsur_id')->constrained('subunsur');
         });
 

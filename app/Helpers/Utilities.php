@@ -55,4 +55,14 @@ class Utilities
 
         return $dupakperiod;
     }
+
+    public static function getActivityNumber($activity){
+        $code = $activity->butirKegiatanDetail->code;
+        $subunsurcode = $activity->butirKegiatanDetail->subUnsurDetail->code;
+        $butirkegs = $activity->butirKegiatanDetail->subUnsurDetail->butirkegiatans;
+        $butirkegs = $butirkegs->sort(function ($a, $b) {
+            
+        });
+        dd($butirkegs);
+    }
 }

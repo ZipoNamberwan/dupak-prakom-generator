@@ -131,6 +131,8 @@ class IIB9Controller extends Controller
         $supervisors = Supervisor::all();
         $iib9 = IIB9::find($id);
 
+        Utilities::getActivityNumber($iib9);
+
         return view('iib9/edit-iib9', [
             'butirkeg' => $butirkegiatan,
             'infratypes' => $infratypes,
