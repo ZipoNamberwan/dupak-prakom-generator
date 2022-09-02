@@ -65,12 +65,14 @@ class IC39Controller extends Controller
         for ($i = 0; $i < count($request->date); $i++) {
 
             $docPath = null;
-            if (array_key_exists($i, $request->file('documentation'))) {
-                $docPath = $request->file('documentation')[$i]->store('images', 'public');
+            if ($request->file('documentation') != null) {
+                if (array_key_exists($i, $request->file('documentation'))) {
+                    $docPath = $request->file('documentation')[$i]->store('images', 'public');
+                }
             }
 
             IC39::create([
-                'title' => $request->title . ' pada Tanggal ' . date("d F Y", strtotime($request->date[$i])),
+                'title' => $request->title . ' pada Tanggal ' . Utilities::getFormattedDate($request->date[$i]),
                 'time' => $request->date[$i],
                 'dataset' => $request->dataset,
                 'storage' => $request->storage,
@@ -110,6 +112,7 @@ class IC39Controller extends Controller
         $supervisors = Supervisor::all();
         $ic39 = IC39::find($id);
 
+        Utilities::getFormattedDate($ic39->time);
         return view('ic39/edit-ic39', [
             'butirkeg' => $butirkegiatan,
             'infratypes' => $infratypes,

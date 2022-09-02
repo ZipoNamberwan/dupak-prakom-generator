@@ -23,7 +23,7 @@ class TemplateContentProcessor
         );
         $cell = $table->addCell(10000, array('gridSpan' => 4, 'valign' => 'top'));
         $cell->addListItem('Waktu dan Tempat', 0, null, 'numbering' . $iib12->id);
-        $cell->addText(date("d F Y", strtotime($iib12->time)) . ' di ' . $iib12->roomDetail->name, null, 'normalContent');
+        $cell->addText(Utilities::getFormattedDate($iib12->time) . ' di ' . $iib12->roomDetail->name, null, 'normalContent');
         $cell->addListItem('Informasi Insfrastruktur', 0, null, 'numbering' . $iib12->id);
         $cell->addListItem('Nama' . "\t\t" . ': ' . $iib12->infra_name, 1, null, 'numbering' . $iib12->id);
         $cell->addListItem('Jenis' . "\t\t" . ': ' . $iib12->infraTypeDetail->name, 1, null, 'numbering' . $iib12->id);
@@ -78,7 +78,7 @@ class TemplateContentProcessor
         $cell->addListItem('Latar Belakang dan Tujuan Pemasangan', 0, null, 'numbering' . $iib9->id);
         $cell->addText(Utilities::transformHTMLToWord($iib9->background), null, 'normalContent');
         $cell->addListItem('Waktu dan Lokasi', 0, null, 'numbering' . $iib9->id);
-        $cell->addText(date("d F Y", strtotime($iib9->time)) . ' di ' . $iib9->roomDetail->name, null, 'normalContent');
+        $cell->addText(Utilities::getFormattedDate($iib9->time) . ' di ' . $iib9->roomDetail->name, null, 'normalContent');
         $cell->addListItem('Nama Infrastruktur TI', 0, null, 'numbering' . $iib9->id);
         $cell->addText($iib9->infraTypeDetail->name . ' ' . $iib9->infra_name, null, 'normalContent');
         $cell->addListItem('Tahapan', 0, null, 'numbering' . $iib9->id);
@@ -127,7 +127,7 @@ class TemplateContentProcessor
         $cell = $table->addCell(10000, array('gridSpan' => 4, 'valign' => 'top'));
 
         $cell->addListItem('Waktu, Lokasi dan Nama Petugas', 0, null, 'numbering' . $iib8->id);
-        $cell->addText(date("d F Y", strtotime($iib8->time)) . ' di ruang' . $iib8->roomDetail->name . ' dilakukan oleh ' . $iib8->userDataDetail->name, null, 'normalContent');
+        $cell->addText(Utilities::getFormattedDate($iib8->time) . ' di ruang' . $iib8->roomDetail->name . ' dilakukan oleh ' . $iib8->userDataDetail->name, null, 'normalContent');
         $cell->addListItem('Daftar Perangkat', 0, null, 'numbering' . $iib8->id);
 
         $tableStyle = array(
@@ -201,7 +201,7 @@ class TemplateContentProcessor
 
         $cell = $table->addCell(10000, array('gridSpan' => 4, 'valign' => 'top'));
 
-        $cell->addListItem('Tanggal Backup: ' . date("d F Y", strtotime($ic39->time)), 0, null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
+        $cell->addListItem('Tanggal Backup: ' . Utilities::getFormattedDate($ic39->time), 0, null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
         $cell->addListItem('Dataset yang dicadangkan: Data ' . $ic39->dataset, 0, null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
         $cell->addListItem('Media Penyimpanan: ' . $ic39->storage, 0, null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
         $cell->addListItem('Nama file backup: ' . $ic39->filename, 0, null, 'numbering' . $ic39->id, array('spaceAfter' => 0));
@@ -268,7 +268,7 @@ class TemplateContentProcessor
 
         $cell->addText('Laporan Permintaan dan Layanan Teknologi Informasi', array('bold' => true), 'normalCenter');
         $cell->addTextBreak();
-        $cell->addText('Periode' . "\t\t\t" . ': ' . date("F", strtotime($ib21->time)) . ' ' . date("Y", strtotime($ib21->time)), null, 'normalContent');
+        $cell->addText('Periode' . "\t\t\t" . ': ' .  date("F", strtotime($ib21->time)) . ' ' . date("Y", strtotime($ib21->time)), null, 'normalContent');
         $cell->addText('Jumlah Permintaan' . "\t\t" . ': ' . count($ib21->services), null, 'normalContent');
 
         $tableStyle = array(

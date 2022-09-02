@@ -93,4 +93,23 @@ class Utilities
         $final = $totalbefore + $rownumber;
         return $final;
     }
+
+    public static function getFormattedDate($date)
+    {
+        $months = [
+            '01' => 'Januari',
+            '02' => 'Februari',
+            '03' => 'Maret',
+            '04' => 'April',
+            '05' => 'Mei',
+            '06' => 'Juni',
+            '07' => 'Juli',
+            '08' => 'Agustus',
+            '09' => 'September',
+            '10' => 'Oktober',
+            '11' => 'November',
+            '12' => 'Desember',
+        ];
+        return date('j', strtotime($date)) . ' ' . $months[date('m', strtotime($date))] . ' ' . date('Y', strtotime($date));
+    }
 }

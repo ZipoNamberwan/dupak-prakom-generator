@@ -43,7 +43,7 @@ class TemplateProcessor
             $table->addCell(2500, $tableCellStyle)->addText('Nama PPK', array('bold' => true), 'normal');
             $table->addCell(2500, $tableCellStyle)->addText($user->name, null, 'normal');
             $table->addCell(2500, $tableCellStyle)->addText('Tanggal', array('bold' => true), 'normal');
-            $table->addCell(2500, $tableCellStyle)->addText(date("d F Y", strtotime($a->time)), null, 'normal');
+            $table->addCell(2500, $tableCellStyle)->addText(Utilities::getFormattedDate($a->time), null, 'normal');
             $table->addRow();
             $table->addCell(2500, $tableCellStyle)->addText('NIP', array('bold' => true), 'normal');
             $table->addCell(2500, $tableCellStyle)->addText($user->nip, null, 'normal');
@@ -78,7 +78,7 @@ class TemplateProcessor
             $cell->addText('Mengetahui', null, 'normalCenter');
             $cell->addText($a->supervisorDetail->pos, null, 'normalCenter');
             $cell = $table->addCell(5000, array('gridSpan' => 2, 'valign' => 'top'));
-            $cell->addText('Probolinggo, ' . date("d F Y", strtotime(Utilities::getSemesterPeriode($a->time)[1])), null, 'normalCenter');
+            $cell->addText('Probolinggo, ' . Utilities::getFormattedDate(Utilities::getSemesterPeriode($a->time)[1]), null, 'normalCenter');
             $cell->addText('Pejabat Pranata Komputer', null, 'normalCenter');
             $table->addRow();
             $cell = $table->addCell(5000, array('gridSpan' => 2, 'valign' => 'top'));
@@ -146,9 +146,9 @@ class TemplateProcessor
             $section->addListItem('Lokasi Infrastruktur' . "\t\t\t" . ': ' . $a->roomDetail->name, 0, null, 'multilevel' . $a->id, 'normal');
 
             if ($a->type == 'detect') {
-                $section->addText('pada tanggal ' . date("d F Y", strtotime($a->time)) . ', Tim IT (' . $a->userDataDetail->name . ') telah mendeteksi dan menganalisis permasalahannya yaitu ' . $a->problem_summary . '.', null, 'normal');
+                $section->addText('pada tanggal ' . Utilities::getFormattedDate($a->time) . ', Tim IT (' . $a->userDataDetail->name . ') telah mendeteksi dan menganalisis permasalahannya yaitu ' . $a->problem_summary . '.', null, 'normal');
             } else {
-                $section->addText('dengan permasalahan yaitu ' . $a->problem_summary . ', pada tanggal ' . date("d F Y", strtotime($a->time)) . ' Tim IT (' . $a->userDataDetail->name . ') telah melakukan perbaikan permasalahan infrastruktur IT tersebut. Hasilnya permasalahan tersebut sudah bisa teratasi.', null, 'normal');
+                $section->addText('dengan permasalahan yaitu ' . $a->problem_summary . ', pada tanggal ' . Utilities::getFormattedDate($a->time) . ' Tim IT (' . $a->userDataDetail->name . ') telah melakukan perbaikan permasalahan infrastruktur IT tersebut. Hasilnya permasalahan tersebut sudah bisa teratasi.', null, 'normal');
             }
 
             $section->addTextBreak();
@@ -200,7 +200,7 @@ class TemplateProcessor
             $section->addListItem('Jenis Infrastruktur' . "\t\t\t" . ': ' . $a->infraTypeDetail->name, 0, null, 'multilevel' . $a->id, 'normal');
             $section->addListItem('Lokasi Infrastruktur' . "\t\t\t" . ': ' . $a->roomDetail->name, 0, null, 'multilevel' . $a->id, 'normal');
 
-            $section->addText('pada tanggal ' . date("d F Y", strtotime($a->time)) . ', Tim IT (' . $a->userDataDetail->name . ') telah melakukan pemasangan infrastruktur IT tersebut.', null, 'normal');
+            $section->addText('pada tanggal ' . Utilities::getFormattedDate($a->time) . ', Tim IT (' . $a->userDataDetail->name . ') telah melakukan pemasangan infrastruktur IT tersebut.', null, 'normal');
 
             $section->addTextBreak();
 
@@ -276,7 +276,7 @@ class TemplateProcessor
             }
 
             $section->addTextBreak();
-            $section->addText('pada tanggal ' . date("d F Y", strtotime($a->time)) . ', Tim IT (' . $a->userDataDetail->name . ') telah melakukan pemeliharaan infrastruktur IT tersebut berupa ' . $a->maintenance_summary . '.', null, 'normal');
+            $section->addText('pada tanggal ' . Utilities::getFormattedDate($a->time) . ', Tim IT (' . $a->userDataDetail->name . ') telah melakukan pemeliharaan infrastruktur IT tersebut berupa ' . $a->maintenance_summary . '.', null, 'normal');
             $section->addTextBreak();
 
             $section->addText('Yang Menyatakan,', null, array('indent' => 6, 'alignment' => Jc::CENTER));
