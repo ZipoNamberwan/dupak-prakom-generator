@@ -10,7 +10,7 @@ class IIB8InfraType extends Model
     use HasFactory;
     use HasFactory;
     protected $guarded = [];
-    protected $table = 'IIB8_infra';
+    protected $table = 'iib8_infra';
 
     public function infraTypeDetail()
     {

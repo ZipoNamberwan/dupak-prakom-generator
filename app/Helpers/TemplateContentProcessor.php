@@ -161,7 +161,7 @@ class TemplateContentProcessor
         $cell->addListItem('Kesimpulan', 0, null, 'numbering' . $iib8->id);
         $cell->addText(Utilities::transformHTMLToWord($iib8->summary), null, 'normalContent');
 
-        $cell->addListItem('Bukti Instalasi', 0, $iib8->documentation == null ? array('color' => 'ff0000') : null, 'numbering' . $iib8->id);
+        $cell->addListItem('Bukti Pemeliharaan', 0, $iib8->documentation == null ? array('color' => 'ff0000') : null, 'numbering' . $iib8->id);
         if ($iib8->documentation != null)
             $cell->addImage(
                 'storage/' . $iib8->documentation,
@@ -210,7 +210,7 @@ class TemplateContentProcessor
             $cell->addImage(
                 'storage/' . $ic39->documentation,
                 array(
-                    'height' => 200,
+                    'height' => 195,
                     'wrappingStyle' => 'behind',
                 )
             );

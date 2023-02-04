@@ -306,12 +306,12 @@ class IIB8Controller extends Controller
             $end = $thisPeriod[1];
         }
         $user = UserData::find(1);
-        $iib9 = IIB8::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->orderBy('time')->get();
+        $iib8 = IIB8::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->orderBy('time')->get();
 
-        if (count($iib9) > 0) {
+        if (count($iib8) > 0) {
             $processor = new TemplateProcessor();
-            $processor->generateWordFile($user, $iib9, function ($phpWord, $table, $iib9) {
-                TemplateContentProcessor::generateIIB8WordContent($phpWord, $table, $iib9);
+            $processor->generateWordFile($user, $iib8, function ($phpWord, $table, $iib8) {
+                TemplateContentProcessor::generateIIB8WordContent($phpWord, $table, $iib8);
             });
         }
     }
