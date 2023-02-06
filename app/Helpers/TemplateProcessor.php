@@ -78,7 +78,8 @@ class TemplateProcessor
             $cell->addText('Mengetahui', null, 'normalCenter');
             $cell->addText($a->supervisorDetail->pos, null, 'normalCenter');
             $cell = $table->addCell(5000, array('gridSpan' => 2, 'valign' => 'top'));
-            $cell->addText('Probolinggo, ' . Utilities::getFormattedDate(Utilities::getSemesterPeriode($a->time)[1]), null, 'normalCenter');
+            // $cell->addText('Probolinggo, ' . Utilities::getFormattedDate(Utilities::getSemesterPeriode($a->time)[1]), null, 'normalCenter');
+            $cell->addText('Probolinggo, 1 Februari 2023', null, 'normalCenter');
             $cell->addText('Pejabat Pranata Komputer', null, 'normalCenter');
             $table->addRow();
             $cell = $table->addCell(5000, array('gridSpan' => 2, 'valign' => 'top'));
