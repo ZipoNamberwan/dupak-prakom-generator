@@ -337,4 +337,26 @@ class IIB8Controller extends Controller
             'periodes' => $dupakperiod
         ]);
     }
+
+    public function generateApprovalByPeriode(Request $request)
+    {
+        $begin = null;
+        $end = null;
+        if ($request->periode != null) {
+            $periodeJson = json_decode($request->periode, true);
+            $begin = $periodeJson[0];
+            $end = $periodeJson[1];
+        } else {
+            $thisPeriod = Utilities::getSemesterPeriode(date('Y-m-d', strtotime('-6 months')));
+            $begin = $thisPeriod[0];
+            $end = $thisPeriod[1];
+        }
+        $user = UserData::find(1);
+        $iib9 = IIB8::where('time', '>=', $begin)->where('time', '<=', $end)->where('user_data_id', '=', $user->id)->orderBy('time')->get();
+
+        if (count($iib9) > 0) {
+            $processor = new TemplateProcessor();
+            $processor->generateiib8ApprovalLetter($iib9);
+        }
+    }
 }

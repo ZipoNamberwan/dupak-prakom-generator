@@ -105,14 +105,24 @@ class TemplateProcessor
         }
 
         $file = $activities[0]->butirKegiatanDetail->code . '.docx';
-        header("Content-Description: File Transfer");
-        header('Content-Disposition: attachment; filename="' . $file . '"');
-        header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+
+        // Save file
+        $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($this->phpWord, 'Word2007');
+        $temp_file = tempnam(sys_get_temp_dir(), 'PHPWord');
+        $objWriter->save($temp_file);
+
+        // Download the file
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename=' . $file);
         header('Content-Transfer-Encoding: binary');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Expires: 0');
-        $xmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($this->phpWord, 'Word2007');
-        $xmlWriter->save("php://output");
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($temp_file));
+        readfile($temp_file);
+        unlink($temp_file);
+        exit;
     }
 
     public function generateiib12ApprovalLetter($activities)
